@@ -22,7 +22,7 @@ const Placeholder = () => {
         <FaSpinner className="animate-spin text-blue-400 text-4xl" />
       </div>
     );
-
+  }
   return (
     <section className="flex flex-col md:flex-row items-center justify-center text-center h-screen">
       <div className="flex-1 bg-slate-400 w-full h-full">&nbsp;</div>
