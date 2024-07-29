@@ -29,7 +29,7 @@ const Placeholder = () => {
           {session ? (
             <div className="relative">
               <span className="ml-4">
-               <Link href='/'> Hi {session.user.name}</Link>
+               <Link href='/dashboard'> Hi {session.user.name}</Link>
               </span>
               <button
                 onClick={() => signOut()}
