@@ -2,32 +2,45 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
-}
 
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+    font-family: 'sans','Inter', sans-serif; /* Assuming 'Inter' is imported */
+    color: #333; /* Example text color */
+  }
+
+  .bg-main {
+    background-color: #6c3a44
+  }
+  .bg-main2{
+    background-color: #6c3a4424;
+  }
+
+  .bg-main3 {
+    background-color: #cf9874;
+  }
+
+  .bg-footer {
+    background-color: #121212;
+  }
+
+  .no-hover-overlay {
+    pointer-events: none;
+  }
+  
+  .map-container {
+    height: 50vh;
+    width: 100%;
+  }
+  
+  
+  /* styles.css */
+
+.parallax {
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: top;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+html {
+  scroll-behavior: smooth;
 }
