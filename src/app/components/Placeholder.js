@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
+import { FaSpinner } from 'react-icons/fa'; // Import FaSpinner
 
 const Placeholder = () => {
   const { data: session } = useSession();
@@ -16,8 +17,11 @@ const Placeholder = () => {
   }, [session]);
 
   if (loading) {
-    return <div>Loading...</div>; // Optional: You can replace this with a loading spinner or component.
-  }
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <FaSpinner className="animate-spin text-blue-400 text-4xl" />
+      </div>
+    );
 
   return (
     <section className="flex flex-col md:flex-row items-center justify-center text-center h-screen">
