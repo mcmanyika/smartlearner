@@ -1,10 +1,8 @@
 // components/Layout.js
 
-import Header from '../components/Header';
-import Footer from '../components/Footer';
 import AIAssistantForm from '../components/ai/AIAssistantForm';
 
-const Layout = ({ children, session }) => {
+const Layout = ({ children }) => {
   return (
     <>
       <main>

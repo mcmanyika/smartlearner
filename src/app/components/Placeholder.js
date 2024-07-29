@@ -7,7 +7,7 @@ const Placeholder = ({ session }) => {
       <div className='flex-1 bg-slate-400 h-screen '>&nbsp;</div>
       <div className='flex-1'>
         <h1 className="text-5xl font-bold uppercase">Smart Learner</h1>
-        <p className="text-lg capitalize">Powering schools to greater hights.</p>
+        <p className="text-lg capitalize">Powering schools to future of learning.</p>
         <div className='p-10'>
           {session ? (
             <div className="relative">
