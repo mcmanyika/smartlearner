@@ -1,20 +1,40 @@
-import React from 'react';
-import { signIn, signOut } from 'next-auth/react';
+import React, { useEffect, useState } from 'react';
+import { signIn, signOut, useSession } from 'next-auth/react';
+import Link from 'next/link';
 
-const Placeholder = ({ session }) => {
+const Placeholder = () => {
+  const { data: session } = useSession();
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (session?.user?.email) {
+      // Additional logic can be added here if necessary
+      setLoading(false);
+    } else {
+      setLoading(false);
+    }
+  }, [session]);
+
+  if (loading) {
+    return <div>Loading...</div>; // Optional: You can replace this with a loading spinner or component.
+  }
+
   return (
-    <section className="flex items-center justify-center text-center">
-      <div className='flex-1 bg-slate-400 h-screen '>&nbsp;</div>
-      <div className='flex-1'>
-        <h1 className="text-5xl font-bold uppercase">Smart Learner</h1>
-        <p className="text-lg capitalize">Powering schools to future of learning.</p>
-        <div className='p-10'>
+    <section className="flex flex-col md:flex-row items-center justify-center text-center h-screen">
+      <div className="flex-1 bg-slate-400 w-full h-full">&nbsp;</div>
+      <div className="flex-1 p-8">
+        <h1 className="text-5xl font-bold uppercase mb-4">Smart Learner</h1>
+        <p className="text-lg capitalize mb-8">Powering schools to future of learning.</p>
+        <div className="p-10">
           {session ? (
             <div className="relative">
               <span className="ml-4">
-                Hi {session.user.name}
+               <Link href='/'> Hi {session.user.name}</Link>
               </span>
-              <button onClick={() => signOut()} className="ml-4 text-white bg-red-500 p-2 rounded-md hover:bg-red-600">
+              <button
+                onClick={() => signOut()}
+                className="ml-4 text-white bg-red-500 p-2 rounded-md hover:bg-red-600"
+              >
                 Sign Out
               </button>
             </div>
