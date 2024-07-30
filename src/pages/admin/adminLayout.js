@@ -14,7 +14,21 @@ import { LiaChalkboardTeacherSolid } from 'react-icons/lia';
 import { IoPeopleOutline } from 'react-icons/io5';
 import { RiAdminFill } from 'react-icons/ri';
 import Footer from '../../app/components/DashFooter';
-import { iconMapping, fetchUserType, fetchTitles } from './utils';
+import { database } from '../../../utils/firebaseConfig';
+import { ref, onValue, query, orderByChild, equalTo } from 'firebase/database';
+
+// Map icons to their components
+const iconMapping = {
+  FaTachometerAlt: FaTachometerAlt,
+  FaPencilRuler: FaPencilRuler,
+  FaCalendarAlt: FaCalendarAlt,
+  FaClipboardList: FaClipboardList,
+  FaUserGraduate: FaUserGraduate,
+  MdOutlineLibraryBooks: MdOutlineLibraryBooks,
+  LiaChalkboardTeacherSolid: LiaChalkboardTeacherSolid,
+  IoPeopleOutline: IoPeopleOutline,
+  RiAdminFill: RiAdminFill
+};
 
 const AdminLayout = ({ children }) => {
   const { data: session } = useSession();
@@ -27,7 +41,7 @@ const AdminLayout = ({ children }) => {
   useEffect(() => {
     const fetchUserType = async () => {
       if (session?.user?.email) {
-        const userRef = ref(database, `userTypes/${session.user.email.replace('.', '_')}`);
+        const userRef = ref(database, `users/${session.user.email.replace('.', '_')}/userType`);
         onValue(userRef, (snapshot) => {
           const data = snapshot.val();
           setUserType(data);
@@ -183,7 +197,6 @@ const AdminLayout = ({ children }) => {
           </div>
           <Breadcrumb />
           {children}
-          
         </main>
         <div className='p-6'>
           <Footer />
