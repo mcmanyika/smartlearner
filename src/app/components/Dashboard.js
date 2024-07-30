@@ -3,7 +3,7 @@ import { signIn, signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { FaSpinner } from 'react-icons/fa'; // Import FaSpinner
 
-const Placeholder = () => {
+const Dashboard = () => {
   const { data: session } = useSession();
   const [loading, setLoading] = useState(true);
 
@@ -33,7 +33,7 @@ const Placeholder = () => {
           {session ? (
             <div className="relative">
               <span className="ml-4">
-               <Link href='/userdashboard'> Hi {session.user.name}</Link>
+               <Link href='/dashboard'> Hi {session.user.name}</Link>
               </span>
               <button
                 onClick={() => signOut()}
@@ -56,4 +56,4 @@ const Placeholder = () => {
   );
 };
 
-export default Placeholder;
+export default Dashboard;

@@ -2,14 +2,14 @@
 
 import { useSession } from 'next-auth/react';
 import Layout from "./components/Layout";
-import Placeholder from '../app/components/Placeholder';
+import Dashboard from '../app/components/Dashboard';
 
 export default function Home() {
   const { data: session } = useSession();
 
   return (
     <Layout session={session}>
-      <Placeholder />
+      <Dashboard />
     </Layout>
   );
 }
