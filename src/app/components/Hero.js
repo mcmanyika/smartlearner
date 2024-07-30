@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import { useGlobalState, setIsOverlayVisible } from '../store'; // Adjust the path to your global state management file
+import { useGlobalState, setIsOverlayVisible } from '../store'; // Adjust the path to your global state management 
 import { XIcon } from '@heroicons/react/outline';
 import { ref, onValue, query, orderByChild, equalTo } from 'firebase/database';
 import { database } from '../../../utils/firebaseConfig';

@@ -6,10 +6,16 @@ import Image from 'next/image';
 import { ref, onValue, query, orderByChild, equalTo } from 'firebase/database';
 import { database } from '../../../utils/firebaseConfig';
 import Breadcrumb from '../utils/Breadcrumb';
+import { useGlobalState, setUserType } from '../../app/store';
 import '../../app/globals.css';
 
-// Import all potential icons
-import { FaTachometerAlt, FaPencilRuler, FaCalendarAlt, FaClipboardList, FaUserGraduate } from 'react-icons/fa';
+import {
+  FaTachometerAlt,
+  FaPencilRuler,
+  FaCalendarAlt,
+  FaClipboardList,
+  FaUserGraduate
+} from 'react-icons/fa';
 import { MdOutlineLibraryBooks } from 'react-icons/md';
 import { LiaChalkboardTeacherSolid } from 'react-icons/lia';
 import { IoPeopleOutline } from 'react-icons/io5';
@@ -34,6 +40,21 @@ const AdminLayout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const [titles, setTitles] = useState([]);
+  const [userType, setUserType] = useGlobalState('userType');
+
+  useEffect(() => {
+    const fetchUserType = async () => {
+      if (session?.user?.email) {
+        const userRef = ref(database, `userTypes/${session.user.email.replace('.', '_')}`);
+        onValue(userRef, (snapshot) => {
+          const data = snapshot.val();
+          setUserType(data);
+        });
+      }
+    };
+
+    fetchUserType();
+  }, [session, setUserType]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -54,7 +75,10 @@ const AdminLayout = ({ children }) => {
                 icon: data[key].icon,
               }))
               .filter(a => a.category === 'dashboard' && a.status === 'Active');
-            setTitles(titlesArray);
+
+            // Filter out specific titles if userType is 'student'
+            const filteredTitles = titlesArray.filter(title => !(userType === 'student' && ['Teachers', 'Class Routine', 'Notice'].includes(title.title)));
+            setTitles(filteredTitles);
           } else {
             setTitles([]);
           }
@@ -65,7 +89,7 @@ const AdminLayout = ({ children }) => {
     };
 
     fetchData();
-  }, []);
+  }, [userType]);
 
   const toggleSidebar = () => {
     setIsExpanded(!isExpanded);
@@ -177,7 +201,6 @@ const AdminLayout = ({ children }) => {
           </div>
           <Breadcrumb />
           {children}
-          
         </main>
         <div className='p-6'>
           <Footer />
