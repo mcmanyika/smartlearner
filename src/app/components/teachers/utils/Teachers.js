@@ -42,12 +42,12 @@ const Teachers = () => {
   }
 
   if (users.length === 0) {
-    return <div className="text-center mt-4">No users found.</div>;
+    return <div className="text-center mt-4">No students found.</div>;
   }
 
   return (
     <div className="w-full text-sm p-6 bg-white">
-      <h2 className="text-xl font-semibold mb-4">Users</h2>
+      <h2 className="text-xl font-semibold mb-4">My Students</h2>
       <div className="overflow-x-auto">
         <table className="min-w-full text-left border-collapse">
           <thead>

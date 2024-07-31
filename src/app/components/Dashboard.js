@@ -1,20 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
-import { FaSpinner } from 'react-icons/fa'; // Import FaSpinner
+import { FaSpinner } from 'react-icons/fa';
+import { useGlobalState } from '../store'; // Adjust the path as necessary
+import fetchUserType from '../../../utils/fetchUserType'; // Adjust the path as necessary
 
 const Dashboard = () => {
   const { data: session } = useSession();
   const [loading, setLoading] = useState(true);
+  const [userType, setUserType] = useGlobalState('userType');
 
   useEffect(() => {
-    if (session?.user?.email) {
-      // Additional logic can be added here if necessary
+    const getUserType = async () => {
+      if (session?.user?.email) {
+        const fetchedUserType = await fetchUserType(session.user.email);
+        setUserType(fetchedUserType);
+      }
       setLoading(false);
-    } else {
-      setLoading(false);
-    }
-  }, [session]);
+    };
+
+    getUserType();
+  }, [session, setUserType]);
 
   if (loading) {
     return (
@@ -23,6 +29,7 @@ const Dashboard = () => {
       </div>
     );
   }
+
   return (
     <section className="flex flex-col md:flex-row items-center justify-center text-center h-screen">
       <div className="flex-1 bg-slate-400 w-full h-full">&nbsp;</div>
@@ -33,7 +40,9 @@ const Dashboard = () => {
           {session ? (
             <div className="relative">
               <span className="ml-4">
-               <Link href='/dashboard'> Hi {session.user.name}</Link>
+                <Link href={userType === 'student' ? '/student_dashboard' : '/teachers_dashboard'}>
+                  Hi {session.user.name}
+                </Link>
               </span>
               <button
                 onClick={() => signOut()}

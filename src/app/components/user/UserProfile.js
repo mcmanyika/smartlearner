@@ -24,7 +24,7 @@ const UserProfile = () => {
         const userRef = ref(database, `users/${session.user.email.replace('.', '_')}/profile`);
         const snapshot = await get(userRef);
         if (snapshot.exists()) {
-          router.push('/userdashboard');
+          router.push('/dashboard');
         } else {
           const userType = await fetchUserType(session.user.email);
           setUserType(userType);

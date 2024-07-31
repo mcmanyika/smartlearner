@@ -9,7 +9,7 @@ import { FaSpinner } from 'react-icons/fa'; // Import FaSpinner
 import NoticeCount from '../app/components/notice/NoticeCount';
 import ClassRoutine from '../app/components/student/ClassRoutine';
 
-const UserDashboard = () => {
+const Dashboard = () => {
   const { data: session } = useSession();
   const [loading, setLoading] = useState(true);
   const router = useRouter();
@@ -55,7 +55,7 @@ const UserDashboard = () => {
   );
 };
 
-export default withAuth(UserDashboard);
+export default withAuth(Dashboard);
 
 export async function getServerSideProps(context) {
   const session = await getSession(context);

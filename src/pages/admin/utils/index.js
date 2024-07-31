@@ -12,6 +12,7 @@ import { LiaChalkboardTeacherSolid } from 'react-icons/lia';
 import { IoPeopleOutline } from 'react-icons/io5';
 import { RiAdminFill } from 'react-icons/ri';
 
+// Map icons to their components
 export const iconMapping = {
   FaTachometerAlt: FaTachometerAlt,
   FaPencilRuler: FaPencilRuler,
@@ -24,14 +25,18 @@ export const iconMapping = {
   RiAdminFill: RiAdminFill,
 };
 
+// Fetch user type and set state
 export const fetchUserType = async (email, setUserType) => {
   const userRef = ref(database, `userTypes/${email.replace('.', '_')}`);
   onValue(userRef, (snapshot) => {
     const data = snapshot.val();
     setUserType(data);
+  }, {
+    onlyOnce: true // Retrieve the value only once to avoid continuous updates
   });
 };
 
+// Fetch titles and set state based on user type
 export const fetchTitles = async (userType, setTitles) => {
   try {
     const titleRef = ref(database, 'title');
@@ -57,8 +62,11 @@ export const fetchTitles = async (userType, setTitles) => {
       } else {
         setTitles([]);
       }
+    }, {
+      onlyOnce: true // Retrieve the value only once to avoid continuous updates
     });
   } catch (error) {
     console.error('Firebase Error:', error);
+    setTitles([]); // Clear titles on error
   }
 };
