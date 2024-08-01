@@ -19,7 +19,7 @@ const Dashboard = () => {
       const checkUserType = async () => {
         const userType = await fetchUserType(session.user.email);
         if (!userType) {
-          router.push('/user'); // Redirect if user type is not found
+          router.push('/user'); // 
         } else {
           setLoading(false);
         }
