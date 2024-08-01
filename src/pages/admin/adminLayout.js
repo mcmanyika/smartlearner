@@ -6,6 +6,7 @@ import Image from 'next/image';
 import Breadcrumb from '../utils/Breadcrumb';
 import { useGlobalState } from '../../app/store';
 import '../../app/globals.css';
+import AIAssistantForm from '../../app/components/ai/AIAssistantForm';
 
 // Import all potential icons
 import { FaTachometerAlt, FaPencilRuler, FaCalendarAlt, FaClipboardList, FaUserGraduate } from 'react-icons/fa';
@@ -201,6 +202,7 @@ const AdminLayout = ({ children }) => {
         <div className='p-6'>
           <Footer />
         </div>
+        <AIAssistantForm />
       </div>
     </div>
   );
