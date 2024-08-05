@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ref, set } from 'firebase/database';
+import { ref, set, get } from 'firebase/database';
 import { database } from '../../../../utils/firebaseConfig'; // Adjust the path as needed
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -22,11 +22,17 @@ const UserTypeSelector = ({ userEmail }) => {
     if (userEmail && userType && selectedSchool) {
       try {
         const userRef = ref(database, `userTypes/${userEmail.replace('.', '_')}`);
-        await set(userRef, { userType, school: selectedSchool });
-        toast.success('User type and school saved successfully');
-        setTimeout(() => {
-          router.push('/dashboard');
-        }, 2000); // Redirect after 2 seconds to allow the toast message to be shown
+        const snapshot = await get(userRef);
+        
+        if (snapshot.exists()) {
+          toast.error('This email is already registered.');
+        } else {
+          await set(userRef, { userType, school: selectedSchool });
+          toast.success('User type and school saved successfully');
+          setTimeout(() => {
+            router.push('/');
+          }, 2000); // Redirect after 2 seconds to allow the toast message to be shown
+        }
       } catch (error) {
         toast.error('Error saving user type and school');
         console.error('Error saving user type and school: ', error);
@@ -61,23 +67,19 @@ const UserTypeSelector = ({ userEmail }) => {
         <option value="parent">Parent</option>
         <option value="contractor">Contractor</option>
       </select>
-
-      
-
       <button
         onClick={handleSubmit}
         className="mt-4 w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-700"
       >
         Submit
       </button>
-
       <ToastContainer 
         position="bottom-center" 
         autoClose={5000} 
         hideProgressBar={false} 
         newestOnTop={false} 
         closeOnClick 
-        rtl={true} 
+        rtl={false} 
         pauseOnFocusLoss 
         draggable 
         pauseOnHover 
