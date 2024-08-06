@@ -66,9 +66,8 @@ const StudentForm = () => {
         <h2 className="text-2xl font-bold mb-6">Student Information Form</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">Student ID</label>
             <input
-              type="text"
+              type="hidden"
               name="studentId"
               value={formData.studentId}
               readOnly
@@ -85,44 +84,60 @@ const StudentForm = () => {
             />
           </div>
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">School Name</label>
-            <input
-              type="text"
+            <select
               name="schoolName"
               value={formData.schoolName}
               onChange={handleChange}
               className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
-            />
+            >
+              <option value="" disabled>Select School</option>
+              <option value="Divaris Makaharis High">Divaris Makaharis High</option>
+              <option value="Glenview 2 High">Glenview 2 High</option>
+            </select>
           </div>
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">Grade Level</label>
-            <input
-              type="text"
+            <select
               name="gradeLevel"
               value={formData.gradeLevel}
               onChange={handleChange}
               className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
-            />
+            >
+              <option value="" disabled>Select Level</option>
+              <option value="Form 1">Form 1</option>
+              <option value="Form 2">Form 2</option>
+              <option value="Form 3">Form 3</option>
+              <option value="Form 4">Form 4</option>
+              <option value="Form 5">Form 5</option>
+              <option value="Form 6">Form 6</option>
+            </select>
           </div>
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">Class Name</label>
             <input
               type="text"
               name="studentClass"
               value={formData.studentClass}
               onChange={handleChange}
               className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+              placeholder="Class Name"
             />
           </div>
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">Graduation Year</label>
-            <input
-              type="text"
+            <select
               name="graduationYear"
               value={formData.graduationYear}
               onChange={handleChange}
               className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
-            />
+            >
+              <option value="" disabled>Select Year</option>
+              {[...Array(17).keys()].map((i) => {
+                const year = 2024 + i;
+                return (
+                  <option key={year} value={year}>
+                    {year}
+                  </option>
+                );
+              })}
+            </select>
           </div>
           <button
             type="submit"

@@ -4,7 +4,7 @@ import React from 'react';
 const StudentDetails = ({ studentData }) => {
   return (
     <div className="mb-4">
-      <p><strong>Student ID:</strong> {studentData.studentId}</p>
+      <p><strong>SCHOOL ID:</strong> {studentData.studentId}</p>
       <p><strong>Email:</strong> {studentData.email}</p>
       <p><strong>Grade Level:</strong> {studentData.gradeLevel}</p>
       <p><strong>Class Name:</strong> {studentData.studentClass}</p>

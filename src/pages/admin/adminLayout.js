@@ -6,6 +6,7 @@ import Image from 'next/image';
 import Breadcrumb from '../utils/Breadcrumb';
 import { useGlobalState } from '../../app/store';
 import '../../app/globals.css';
+import { FaSpinner } from 'react-icons/fa';
 import AIAssistantForm from '../../app/components/ai/AIAssistantForm';
 import Footer from '../../app/components/DashFooter';
 import { database } from '../../../utils/firebaseConfig';
@@ -37,27 +38,44 @@ const AdminLayout = ({ children }) => {
   const [titles, setTitles] = useState([]);
   const [userType, setUserType] = useGlobalState('userType');
   const [schoolName, setSchoolName] = useGlobalState('schoolName');
+  const [globalStudentId] = useGlobalState('studentId'); // Directly access globalStudentId
+  const [isLoading, setIsLoading] = useState(true); // Add loading state
 
   useEffect(() => {
     const fetchUserDetails = async () => {
       if (session?.user?.email) {
-        const userEmail = session.user.email.replace('.', '_');
-        const userRef = ref(database, `users/${userEmail}/userType`);
-        onValue(userRef, (snapshot) => {
-          const data = snapshot.val();
-          setUserType(data);
-        });
+        // Use globalStudentId directly
+        const studentIdRef = ref(database, `students/${globalStudentId}/studentId`);
 
-        const schoolNameRef = ref(database, `students/${userEmail}/studentId/schoolName`);
-        onValue(schoolNameRef, (snapshot) => {
-          const data = snapshot.val();
-          setSchoolName(data);
+        onValue(studentIdRef, (snapshot) => {
+          const studentId = snapshot.val();
+
+          if (studentId) {
+            if (studentId.startsWith('STID')) {
+              setUserType('student');
+            } else if (studentId.startsWith('TEID')) {
+              setUserType('teacher');
+            } else {
+              setUserType('unknown');
+            }
+
+            const schoolNameRef = ref(database, `students/${globalStudentId}/schoolName`); // Use globalStudentId
+            onValue(schoolNameRef, (snapshot) => {
+              const schoolNameData = snapshot.val();
+              setSchoolName(schoolNameData);
+              setIsLoading(false); // Set loading to false after fetching data
+            });
+          } else {
+            console.error('Student ID not found for user.');
+            setUserType('unknown');
+            setIsLoading(false); // Set loading to false if no studentId is found
+          }
         });
       }
     };
 
     fetchUserDetails();
-  }, [session, setUserType, setSchoolName]);
+  }, [session, globalStudentId, setUserType, setSchoolName]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -79,7 +97,13 @@ const AdminLayout = ({ children }) => {
               }))
               .filter(a => a.category === 'dashboard' && a.status === 'Active');
 
-            const filteredTitles = titlesArray.filter(title => !(userType === 'student' && ['Teachers', 'Class Routine', 'Notice'].includes(title.title)));
+            // Filter titles based on userType
+            const filteredTitles = titlesArray.filter(title => {
+              if (userType === 'student') {
+                return !['Teachers', 'Class Routine', 'Notice'].includes(title.title);
+              }
+              return true;
+            });
             setTitles(filteredTitles);
           } else {
             setTitles([]);
@@ -113,34 +137,40 @@ const AdminLayout = ({ children }) => {
           <FaBars className="cursor-pointer text-2xl" onClick={toggleSidebar} />
         </div>
         <nav>
-          <ul>
-            {titles.length > 0 && titles.map((rw) => {
-              const IconComponent = iconMapping[rw.icon];
-              return (
-                <li key={rw.id} className="mb-4 flex items-center">
-                  <Link href={rw.link}>
-                    <IconComponent className="mr-2 text-2xl" />
-                  </Link>
-                  {isExpanded && (
+          {isLoading ? (
+            <div className="flex items-center justify-center h-32">
+            <FaSpinner className="animate-spin text-blue-500 text-3xl" />
+          </div>
+          ) : (
+            <ul>
+              {titles.length > 0 && titles.map((rw) => {
+                const IconComponent = iconMapping[rw.icon];
+                return (
+                  <li key={rw.id} className="mb-4 flex items-center">
                     <Link href={rw.link}>
-                      <div className="block p-2 hover:bg-blue-500 rounded cursor-pointer">{rw.title}</div>
+                      <IconComponent className="mr-2 text-2xl" />
                     </Link>
-                  )}
-                </li>
-              );
-            })}
-            <li className="mb-4 flex items-center">
-              <FaSignOutAlt className="mr-2 text-2xl" />
-              {isExpanded && (
-                <button
-                  onClick={() => signOut()}
-                  className="block w-full text-left p-2 hover:bg-blue-500 rounded"
-                >
-                  Sign Out
-                </button>
-              )}
-            </li>
-          </ul>
+                    {isExpanded && (
+                      <Link href={rw.link}>
+                        <div className="block p-2 hover:bg-blue-500 rounded cursor-pointer">{rw.title}</div>
+                      </Link>
+                    )}
+                  </li>
+                );
+              })}
+              <li className="mb-4 flex items-center">
+                <FaSignOutAlt className="mr-2 text-2xl" />
+                {isExpanded && (
+                  <button
+                    onClick={() => signOut()}
+                    className="block w-full text-left p-2 hover:bg-blue-500 rounded"
+                  >
+                    Sign Out
+                  </button>
+                )}
+              </li>
+            </ul>
+          )}
         </nav>
       </aside>
 
