@@ -1,9 +1,8 @@
 import React, { useEffect } from 'react';
-import { signIn, signOut, useSession } from 'next-auth/react';
-import { FaSpinner } from 'react-icons/fa';
+import { signIn,  useSession } from 'next-auth/react';
 
 const Dashboard = () => {
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
 
   useEffect(() => {
     if (session) {
@@ -12,20 +11,7 @@ const Dashboard = () => {
     }
   }, [session]);
 
-  // Show loading spinner while session status is being determined
-  if (status === '') {
-    return (
-      <section className="flex flex-col md:flex-row items-center justify-center text-center h-screen">
-        <div className="flex-1 p-8">
-          <div className="text-lg">
-            <FaSpinner className="animate-spin text-blue-500 text-3xl" />
-          </div>
-        </div>
-      </section>
-    );
-  }
-
-  // Render content based on session state
+ 
   return (<>
     {!session && (
     <section className="flex flex-col md:flex-row items-center justify-center text-center h-screen">

@@ -21,7 +21,7 @@ const ProfileAttributes = () => {
   const router = useRouter();
 
   useEffect(() => {
-    if (status === 'loading') {
+    if (status === '') {
       // Wait until the session status is determined
       return;
     }
@@ -63,9 +63,8 @@ const ProfileAttributes = () => {
         <h2 className="text-2xl font-bold mb-6">Profile Attributes Form</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">Student ID</label>
             <input
-              type="text"
+              type="hidden"
               name="studentId"
               value={formData.studentId}
               readOnly

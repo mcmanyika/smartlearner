@@ -178,12 +178,7 @@ const AdminLayout = ({ children }) => {
                         <span>Home</span>
                       </div>
                     </Link>
-                    <Link href="">
-                      <div className="flex items-center text-sm text-left cursor-pointer hover:bg-gray-200 rounded p-2">
-                        <FaCog className="mr-2" />
-                        <span>Settings</span>
-                      </div>
-                    </Link>
+                    
                     <button
                       onClick={() => signOut()}
                       className="mt-2 flex items-center w-full text-left p-2 hover:bg-gray-200 rounded text-sm text-blue-700"

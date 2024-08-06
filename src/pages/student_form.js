@@ -19,7 +19,7 @@ const StudentForm = () => {
     email: '',
     schoolName: '',
     gradeLevel: '',
-    className: '',
+    studentClass: '',
     graduationYear: '',
   });
   const [studentId, setStudentId] = useGlobalState('studentId');
@@ -108,8 +108,8 @@ const StudentForm = () => {
             <label className="block text-sm font-medium text-gray-700">Class Name</label>
             <input
               type="text"
-              name="className"
-              value={formData.className}
+              name="studentClass"
+              value={formData.studentClass}
               onChange={handleChange}
               className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
             />

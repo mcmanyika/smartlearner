@@ -1,18 +1,21 @@
-// components/student/ClassRoutine.js
 import React, { useEffect, useState } from 'react';
 import { ref, onValue } from 'firebase/database';
 import { database } from '../../../../utils/firebaseConfig';
-import { useGlobalState } from '../../store'; // Import useGlobalState
+import { useGlobalState } from '../../store';
 
 const ClassRoutine = () => {
   const [routine, setRoutine] = useState([]);
-  const [studentClass] = useGlobalState('studentClass'); // Access studentClass from global state
-  const [, setRoutineCount] = useGlobalState('routineCount'); // Access routineCount from global state
+  const [studentClass] = useGlobalState('studentClass');
+  const [, setRoutineCount] = useGlobalState('routineCount');
 
   useEffect(() => {
+    console.log('Fetching routines for studentClass:', studentClass); // Debug log
+
     const routineRef = ref(database, 'classRoutine');
-    onValue(routineRef, (snapshot) => {
+    const handleData = (snapshot) => {
       const data = snapshot.val();
+      console.log('Fetched data:', data); // Debug log
+
       if (data) {
         const currentDate = new Date();
         const filteredRoutine = Object.keys(data)
@@ -21,15 +24,21 @@ const ClassRoutine = () => {
             ...data[key]
           }))
           .filter(entry => {
-            // Filter by studentClass and dates ahead of current date
+            console.log('Evaluating entry:', entry); // Debug log
             return entry.studentclass === studentClass && new Date(entry.date) > currentDate;
           });
-        
+
+        console.log('Filtered routine:', filteredRoutine); // Debug log
         setRoutine(filteredRoutine);
-        setRoutineCount(filteredRoutine.length); // Update routineCount in global state
+        setRoutineCount(filteredRoutine.length);
       }
+    };
+
+    onValue(routineRef, handleData, {
+      onlyOnce: true
     });
-  }, [studentClass, setRoutineCount]); 
+
+  }, [studentClass, setRoutineCount]);
 
   const getDayOfWeek = (dateString) => {
     const date = new Date(dateString);
