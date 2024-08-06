@@ -54,7 +54,7 @@ const ClassRoutine = () => {
         <div className="overflow-x-auto">
           <table className="min-w-full text-left border-collapse">
             <thead>
-              <tr>
+              <tr className='uppercase'>
                 <th className="p-2 border-b">Day</th>
                 <th className="p-2 border-b">Time</th>
                 <th className="p-2 border-b">Subject</th>

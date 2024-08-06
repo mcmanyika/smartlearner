@@ -4,7 +4,7 @@ import { FiChevronRight } from 'react-icons/fi';
 
 const Breadcrumb = () => {
   const router = useRouter();
-  const pathnames = router.asPath.split('/').filter((x) => x);
+  const pathnames = router.asPath.split('/').filter((x) => x).map((path) => path.replace(/_/g, ' '));
 
   return (
     <nav className="flex items-center text-sm capitalize font-thin space-x-2 pl-1 p-5">
