@@ -9,7 +9,7 @@ import { database } from '../../utils/firebaseConfig';
 import { ref, get } from 'firebase/database';
 import StudentDetails from '../app/components/student/StudentDetails';
 import { useRouter } from 'next/router';
-import { useGlobalState, setStudentId, setStudentClass } from '../app/store';
+import { useGlobalState, setStudentClass,} from '../app/store';
 
 const StudentDash = () => {
   const { data: session, status } = useSession();
@@ -17,7 +17,7 @@ const StudentDash = () => {
   const [studentData, setStudentData] = useState(null);
   const router = useRouter();
   const [globalStudentId, setGlobalStudentId] = useGlobalState('studentId');
-  const [studentClass] = useGlobalState('studentClass');
+  const [globalSchoolName, setGlobalSchoolName] = useGlobalState('schoolName');
 
   useEffect(() => {
     if (status === 'loading') {
@@ -43,6 +43,7 @@ const StudentDash = () => {
           const [studentId, studentInfo] = matchedStudent;
           setStudentData(studentInfo);
           setGlobalStudentId(studentId);
+          setGlobalSchoolName(studentInfo.schoolName);
           setStudentClass(studentInfo.studentClass); // Set studentClass in global state
           localStorage.setItem('studentId', studentId);
         } else {

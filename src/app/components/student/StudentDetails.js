@@ -6,7 +6,6 @@ const StudentDetails = ({ studentData }) => {
     <div className="mb-4">
       <p><strong>Student ID:</strong> {studentData.studentId}</p>
       <p><strong>Email:</strong> {studentData.email}</p>
-      <p><strong>School Name:</strong> {studentData.schoolName}</p>
       <p><strong>Grade Level:</strong> {studentData.gradeLevel}</p>
       <p><strong>Class Name:</strong> {studentData.studentClass}</p>
       <p><strong>Graduation Year:</strong> {studentData.graduationYear}</p>

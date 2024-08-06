@@ -1,24 +1,22 @@
 import { useEffect, useState } from 'react';
 import { useSession, signOut } from 'next-auth/react';
 import Link from 'next/link';
-import { FaBars, FaSignOutAlt, FaHome, FaCog } from 'react-icons/fa';
+import { FaBars, FaSignOutAlt, FaHome } from 'react-icons/fa';
 import Image from 'next/image';
 import Breadcrumb from '../utils/Breadcrumb';
 import { useGlobalState } from '../../app/store';
 import '../../app/globals.css';
 import AIAssistantForm from '../../app/components/ai/AIAssistantForm';
+import Footer from '../../app/components/DashFooter';
+import { database } from '../../../utils/firebaseConfig';
+import { ref, onValue, query, orderByChild, equalTo } from 'firebase/database';
 
-// Import all potential icons
 import { FaTachometerAlt, FaPencilRuler, FaCalendarAlt, FaClipboardList, FaUserGraduate } from 'react-icons/fa';
 import { MdOutlineLibraryBooks } from 'react-icons/md';
 import { LiaChalkboardTeacherSolid } from 'react-icons/lia';
 import { IoPeopleOutline } from 'react-icons/io5';
 import { RiAdminFill } from 'react-icons/ri';
-import Footer from '../../app/components/DashFooter';
-import { database } from '../../../utils/firebaseConfig';
-import { ref, onValue, query, orderByChild, equalTo } from 'firebase/database';
 
-// Map icons to their components
 const iconMapping = {
   FaTachometerAlt: FaTachometerAlt,
   FaPencilRuler: FaPencilRuler,
@@ -38,20 +36,28 @@ const AdminLayout = ({ children }) => {
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const [titles, setTitles] = useState([]);
   const [userType, setUserType] = useGlobalState('userType');
+  const [schoolName, setSchoolName] = useGlobalState('schoolName');
 
   useEffect(() => {
-    const fetchUserType = async () => {
+    const fetchUserDetails = async () => {
       if (session?.user?.email) {
-        const userRef = ref(database, `users/${session.user.email.replace('.', '_')}/userType`);
+        const userEmail = session.user.email.replace('.', '_');
+        const userRef = ref(database, `users/${userEmail}/userType`);
         onValue(userRef, (snapshot) => {
           const data = snapshot.val();
           setUserType(data);
         });
+
+        const schoolNameRef = ref(database, `students/${userEmail}/studentId/schoolName`);
+        onValue(schoolNameRef, (snapshot) => {
+          const data = snapshot.val();
+          setSchoolName(data);
+        });
       }
     };
 
-    fetchUserType();
-  }, [session, setUserType]);
+    fetchUserDetails();
+  }, [session, setUserType, setSchoolName]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -73,7 +79,6 @@ const AdminLayout = ({ children }) => {
               }))
               .filter(a => a.category === 'dashboard' && a.status === 'Active');
 
-            // Filter out specific titles if userType is 'student'
             const filteredTitles = titlesArray.filter(title => !(userType === 'student' && ['Teachers', 'Class Routine', 'Notice'].includes(title.title)));
             setTitles(filteredTitles);
           } else {
@@ -102,10 +107,9 @@ const AdminLayout = ({ children }) => {
 
   return (
     <div className="flex min-h-screen text-base bg-gray-100 relative">
-      {/* Sidebar */}
       <aside className={`fixed z-40 transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 md:relative md:translate-x-0 ${isExpanded ? 'w-52' : 'w-16'} bg-blue-400 text-white p-4 min-w-h-screen`}>
         <div className="flex justify-between items-center mb-6">
-          {isExpanded && <h2 className="text-lg font-semibold">Glenview 2 High</h2>}
+          {isExpanded && <h2 className="text-lg font-semibold">{schoolName}</h2>}
           <FaBars className="cursor-pointer text-2xl" onClick={toggleSidebar} />
         </div>
         <nav>
@@ -140,20 +144,15 @@ const AdminLayout = ({ children }) => {
         </nav>
       </aside>
 
-      {/* Backdrop for mobile */}
       {isSidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black opacity-50 z-30 md:hidden"
-          onClick={toggleMobileSidebar}
-        ></div>
+        <div className="fixed inset-0 bg-black opacity-50 z-30 md:hidden" onClick={toggleMobileSidebar}></div>
       )}
 
-      {/* Main content */}
       <div className="flex-1 flex flex-col transition-all duration-300 ease-in-out">
         <header className="flex items-center justify-between bg-blue-400 text-white p-4 md:hidden">
           <div className="flex items-center">
             <FaBars className="cursor-pointer text-2xl mr-4" onClick={toggleMobileSidebar} />
-            <h1 className="text-lg">Glenview 2 High</h1>
+            <h1 className="text-lg">{schoolName}</h1>
           </div>
         </header>
         <main className="flex-1 p-6">
@@ -162,13 +161,7 @@ const AdminLayout = ({ children }) => {
               <div className="flex items-center">
                 <span className="text-sm mr-2">{session.user.name}</span>
                 <div className="rounded-full overflow-hidden h-10 w-10 relative cursor-pointer" onClick={togglePopover}>
-                  <Image
-                    src={session.user.image}
-                    alt="Profile"
-                    width={50}
-                    height={50}
-                    className="object-cover"
-                  />
+                  <Image src={session.user.image} alt="Profile" width={50} height={50} className="object-cover" />
                 </div>
                 {isPopoverOpen && (
                   <div className="absolute right-0 mt-40 w-48 bg-white shadow-lg rounded-lg p-4">
@@ -178,11 +171,7 @@ const AdminLayout = ({ children }) => {
                         <span>Home</span>
                       </div>
                     </Link>
-                    
-                    <button
-                      onClick={() => signOut()}
-                      className="mt-2 flex items-center w-full text-left p-2 hover:bg-gray-200 rounded text-sm text-blue-700"
-                    >
+                    <button onClick={() => signOut()} className="mt-2 flex items-center w-full text-left p-2 hover:bg-gray-200 rounded text-sm text-blue-700">
                       <FaSignOutAlt className="mr-2" />
                       Sign Out
                     </button>
