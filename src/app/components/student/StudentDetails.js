@@ -11,7 +11,7 @@ const StudentDetails = ({ studentData }) => {
         <span className="font-semibold w-1/3">Email:</span>
         <span>{studentData.email}</span>
       </div>
-      <div className="flex mb-2">
+      <div className="flex capitalize mb-2">
         <span className="font-semibold w-1/3">Grade Level:</span>
         <span>{studentData.gradeLevel}</span>
       </div>
