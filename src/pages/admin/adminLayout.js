@@ -131,9 +131,9 @@ const AdminLayout = ({ children }) => {
 
   return (
     <div className="flex min-h-screen text-base bg-gray-100 relative">
-      <aside className={`fixed z-40 transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 md:relative md:translate-x-0 ${isExpanded ? 'w-52' : 'w-16'} bg-blue-400 text-white p-4 min-w-h-screen`}>
+      <aside className={`fixed z-40 transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 md:relative md:translate-x-0 ${isExpanded ? 'w-72' : 'w-16'} bg-blue-400 text-white p-4 min-w-h-screen`}>
         <div className="flex justify-between items-center mb-6">
-          {isExpanded && <h2 className="text-lg font-semibold">{schoolName}</h2>}
+          {isExpanded && <h2 className="text-lg font-thin">{schoolName}</h2>}
           <FaBars className="cursor-pointer text-2xl" onClick={toggleSidebar} />
         </div>
         <nav>
