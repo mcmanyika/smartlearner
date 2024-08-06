@@ -1,22 +1,21 @@
 import { useEffect, useState } from 'react';
 import { useSession, signOut } from 'next-auth/react';
 import Link from 'next/link';
-import { FaBars, FaSignOutAlt, FaHome } from 'react-icons/fa';
+import { FaBars, FaSignOutAlt, FaHome, FaSpinner } from 'react-icons/fa';
 import Image from 'next/image';
 import Breadcrumb from '../utils/Breadcrumb';
 import { useGlobalState } from '../../app/store';
 import '../../app/globals.css';
-import { FaSpinner } from 'react-icons/fa';
 import AIAssistantForm from '../../app/components/ai/AIAssistantForm';
 import Footer from '../../app/components/DashFooter';
 import { database } from '../../../utils/firebaseConfig';
 import { ref, onValue, query, orderByChild, equalTo } from 'firebase/database';
-
 import { FaTachometerAlt, FaPencilRuler, FaCalendarAlt, FaClipboardList, FaUserGraduate } from 'react-icons/fa';
 import { MdOutlineLibraryBooks } from 'react-icons/md';
 import { LiaChalkboardTeacherSolid } from 'react-icons/lia';
 import { IoPeopleOutline } from 'react-icons/io5';
 import { RiAdminFill } from 'react-icons/ri';
+import { useRouter } from 'next/router';
 
 const iconMapping = {
   FaTachometerAlt: FaTachometerAlt,
@@ -32,19 +31,19 @@ const iconMapping = {
 
 const AdminLayout = ({ children }) => {
   const { data: session } = useSession();
+  const router = useRouter(); // Initialize router
   const [isExpanded, setIsExpanded] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const [titles, setTitles] = useState([]);
   const [userType, setUserType] = useGlobalState('userType');
   const [schoolName, setSchoolName] = useGlobalState('schoolName');
-  const [globalStudentId] = useGlobalState('studentId'); // Directly access globalStudentId
-  const [isLoading, setIsLoading] = useState(true); // Add loading state
+  const [globalStudentId] = useGlobalState('studentId');
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchUserDetails = async () => {
       if (session?.user?.email) {
-        // Use globalStudentId directly
         const studentIdRef = ref(database, `students/${globalStudentId}/studentId`);
 
         onValue(studentIdRef, (snapshot) => {
@@ -59,16 +58,16 @@ const AdminLayout = ({ children }) => {
               setUserType('unknown');
             }
 
-            const schoolNameRef = ref(database, `students/${globalStudentId}/schoolName`); // Use globalStudentId
+            const schoolNameRef = ref(database, `students/${globalStudentId}/schoolName`);
             onValue(schoolNameRef, (snapshot) => {
               const schoolNameData = snapshot.val();
               setSchoolName(schoolNameData);
-              setIsLoading(false); // Set loading to false after fetching data
+              setIsLoading(false);
             });
           } else {
             console.error('Student ID not found for user.');
             setUserType('unknown');
-            setIsLoading(false); // Set loading to false if no studentId is found
+            setIsLoading(false);
           }
         });
       }
@@ -76,6 +75,8 @@ const AdminLayout = ({ children }) => {
 
     fetchUserDetails();
   }, [session, globalStudentId, setUserType, setSchoolName]);
+
+ 
 
   useEffect(() => {
     const fetchData = async () => {
@@ -97,7 +98,6 @@ const AdminLayout = ({ children }) => {
               }))
               .filter(a => a.category === 'dashboard' && a.status === 'Active');
 
-            // Filter titles based on userType
             const filteredTitles = titlesArray.filter(title => {
               if (userType === 'student') {
                 return !['Teachers', 'Class Routine', 'Notice'].includes(title.title);
@@ -139,8 +139,8 @@ const AdminLayout = ({ children }) => {
         <nav>
           {isLoading ? (
             <div className="flex items-center justify-center h-32">
-            <FaSpinner className="animate-spin text-blue-500 text-3xl" />
-          </div>
+              <FaSpinner className="animate-spin text-blue-500 text-3xl" />
+            </div>
           ) : (
             <ul>
               {titles.length > 0 && titles.map((rw) => {

@@ -14,7 +14,7 @@ const withAuth = (WrappedComponent) => {
     }, [router, session, status]);
 
     if (status === 'loading' || !session) {
-      return <div>Loading...</div>; // Or a loading spinner
+      return <div></div>; // Or a loading spinner
     }
 
     return <WrappedComponent {...props} />;

@@ -1,36 +1,67 @@
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
 import withAuth from '../../utils/withAuth';
-import AdminLayout from './admin/adminLayout';
-import fetchUserType from '../../utils/fetchUserType';
-import UserProfile from '../app/components/user/UserProfile';
+import { FaSpinner } from 'react-icons/fa';
+import { useRouter } from 'next/router';
+import { database } from '../../utils/firebaseConfig';
+import { ref, get } from 'firebase/database';
+import StudentDash from './student_dash';
+import TeacherDashboard from './teachers_dashboard';
 
 const Dashboard = () => {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const [loading, setLoading] = useState(true);
+  const [userType, setUserType] = useState(null); // State to hold user type
+  const [selectedComponent, setSelectedComponent] = useState(null); // State to hold the selected component
   const router = useRouter();
 
   useEffect(() => {
-    if (session?.user?.email) {
-      const checkUserType = async () => {
-        const userType = await fetchUserType(session.user.email);
-        if (!userType) {
-          router.push('/user'); // Adjust the path to your user type selector page
-        } else {
+    if (status === 'authenticated') {
+      const fetchUserType = async () => {
+        try {
+          const userEmail = session.user.email.replace('.', '_');
+          const userRef = ref(database, `userTypes/${userEmail}`);
+          const snapshot = await get(userRef);
+          if (snapshot.exists()) {
+            const userData = snapshot.val();
+            setUserType(userData.userType);
+            if (userData.userType === 'student') {
+              setSelectedComponent(<StudentDash />);
+            } else if (userData.userType === 'teacher') {
+              setSelectedComponent(<TeacherDashboard />);
+            } else {
+              // Handle other user types or a default component
+              setSelectedComponent(<div>Welcome, {userData.userType}</div>);
+            }
+          } else {
+            // Redirect to /user if the user is not found in userTypes
+            router.push('/user');
+          }
+        } catch (error) {
+          console.error('Error fetching user type:', error);
+        } finally {
           setLoading(false);
         }
       };
-      checkUserType();
+      fetchUserType();
     }
-  }, [session, router]);
+  }, [session, status, router]);
 
-  
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <FaSpinner className="animate-spin text-4xl" />
+      </div>
+    );
+  }
 
   return (
-    <AdminLayout>
-      <UserProfile />
-    </AdminLayout>
+    <div>
+      {selectedComponent}
+      <div className="mt-4 text-center">
+        {userType && <p>User Type: {userType}</p>}
+      </div>
+    </div>
   );
 };
 

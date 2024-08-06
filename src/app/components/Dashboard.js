@@ -7,7 +7,7 @@ const Dashboard = () => {
   useEffect(() => {
     if (session) {
       // Redirect to student dashboard if session exists
-      window.location.href = '/student_dash';
+      window.location.href = '/dashboard';
     }
   }, [session]);
 

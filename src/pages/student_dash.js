@@ -74,7 +74,7 @@ const StudentDash = () => {
               <>
                 <NoticeCount />
                 <div className="w-full flex flex-col md:flex-row mt-4">
-                  <div className="w-1/3 bg-white border shadow-sm rounded p-5 m-2 mt-0 ml-0">
+                  <div className="w-1/3 ">
                     {studentData ? (
                       <>
                         <StudentDetails studentData={studentData} />

@@ -18,6 +18,15 @@ const UserTypeSelector = ({ userEmail }) => {
     setSelectedSchool(event.target.value);
   };
 
+  const generateUserId = (type) => {
+    const prefix = type === 'student' ? 'STID' :
+                   type === 'teacher' ? 'TEID' :
+                   type === 'staff' ? 'SFID' :
+                   type === 'parent' ? 'PRID' :
+                   'CTID';
+    return `${prefix}-${Math.floor(Math.random() * 1000000).toString().padStart(6, '0')}`;
+  };
+
   const handleSubmit = async () => {
     if (userEmail && userType && selectedSchool) {
       try {
@@ -27,7 +36,8 @@ const UserTypeSelector = ({ userEmail }) => {
         if (snapshot.exists()) {
           toast.error('This email is already registered.');
         } else {
-          await set(userRef, { userType, school: selectedSchool });
+          const userId = generateUserId(userType);
+          await set(userRef, { userType, school: selectedSchool, userId });
           toast.success('User type and school saved successfully');
           setTimeout(() => {
             router.push('/');
@@ -43,12 +53,12 @@ const UserTypeSelector = ({ userEmail }) => {
   };
 
   return (
-    <div className="mb-4">
+    <div className="max-w-lg mx-auto mt-10 p-8 bg-white rounded-lg shadow-md">
       <select
         id="school"
         value={selectedSchool}
         onChange={handleSchoolChange}
-        className="mt-4 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+        className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
       >
         <option value="" disabled>Select school...</option>
         <option value="Divaris Makaharis High">Divaris Makaharis High</option>
@@ -58,7 +68,7 @@ const UserTypeSelector = ({ userEmail }) => {
         id="userType"
         value={userType}
         onChange={handleUserTypeChange}
-        className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+        className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
       >
         <option value="" disabled>Select user type...</option>
         <option value="student">Student</option>
