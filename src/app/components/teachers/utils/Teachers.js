@@ -3,35 +3,60 @@ import { ref, onValue } from 'firebase/database';
 import { database } from '../../../../../utils/firebaseConfig';
 import { FaSpinner } from 'react-icons/fa';
 
-const Teachers = () => {
-  const [users, setUsers] = useState([]);
+const Students = () => {
+  const [students, setStudents] = useState([]);
+  const [classes, setClasses] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const fetchUsers = async () => {
+    const fetchStudentsAndClasses = async () => {
       try {
-        const usersRef = ref(database, 'users');
-        onValue(usersRef, (snapshot) => {
-          const data = snapshot.val();
-          if (data) {
-            const usersArray = Object.keys(data).map(key => ({
+        const studentsRef = ref(database, 'students');
+        const classesRef = ref(database, 'classes');
+
+        // Fetch students data
+        onValue(studentsRef, (snapshot) => {
+          const studentsData = snapshot.val();
+          if (studentsData) {
+            const studentsArray = Object.keys(studentsData).map(key => ({
               id: key,
-              ...data[key].profile // Adjusting to fetch profile data
+              ...studentsData[key] // Adjusting to fetch all data
             }));
-            setUsers(usersArray);
+            setStudents(studentsArray);
           } else {
-            console.log('No users data found.');
+            console.log('No students data found.');
           }
         });
+
+        // Fetch classes data
+        onValue(classesRef, (snapshot) => {
+          const classesData = snapshot.val();
+          if (classesData) {
+            const classesArray = Object.keys(classesData).map(key => ({
+              id: key,
+              ...classesData[key] // Adjusting to fetch all data
+            }));
+            setClasses(classesArray);
+          } else {
+            console.log('No classes data found.');
+          }
+        });
+
       } catch (error) {
-        console.error('Error fetching users:', error);
+        console.error('Error fetching data:', error);
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchUsers();
+    fetchStudentsAndClasses();
   }, []);
+
+  // Filter students based on matching studentClass and className, and studentId starts with "STID"
+  const filteredStudents = students.filter(student => 
+    student.studentId?.startsWith('STID') &&
+    classes.some(cls => cls.className === student.studentClass)
+  );
 
   if (isLoading) {
     return (
@@ -41,7 +66,7 @@ const Teachers = () => {
     );
   }
 
-  if (users.length === 0) {
+  if (filteredStudents.length === 0) {
     return <div className="text-center mt-4">No students found.</div>;
   }
 
@@ -53,20 +78,20 @@ const Teachers = () => {
           <thead>
             <tr>
               <th className="p-2 border-b">Student ID</th>
-              <th className="p-2 border-b">First Name</th>
-              <th className="p-2 border-b">Last Name</th>
-              <th className="p-2 border-b">Gender</th>
+              <th className="p-2 border-b">Student Class</th>
+              <th className="p-2 border-b">Student Level</th>
+              <th className="p-2 border-b">Graduation Year</th>
               <th className="p-2 border-b">Email</th>
             </tr>
           </thead>
           <tbody>
-            {users.map(user => (
-              <tr key={user.id}>
-                <td className="p-2 border-b">{user.studentId || 'N/A'}</td>
-                <td className="p-2 border-b">{user.firstName || 'N/A'}</td>
-                <td className="p-2 border-b">{user.lastName || 'N/A'}</td>
-                <td className="p-2 border-b capitalize">{user.gender || 'N/A'}</td>
-                <td className="p-2 border-b">{user.email || 'N/A'}</td>
+            {filteredStudents.map(student => (
+              <tr key={student.id}>
+                <td className="p-2 border-b">{student.studentId || 'N/A'}</td>
+                <td className="p-2 border-b">{student.studentClass || 'N/A'}</td>
+                <td className="p-2 border-b capitalize">{student.gradeLevel || 'N/A'}</td>
+                <td className="p-2 border-b">{student.graduationYear || 'N/A'}</td>
+                <td className="p-2 border-b">{student.email || 'N/A'}</td>
               </tr>
             ))}
           </tbody>
@@ -76,4 +101,4 @@ const Teachers = () => {
   );
 };
 
-export default Teachers;
+export default Students;

@@ -100,7 +100,7 @@ const AdminLayout = ({ children }) => {
 
             const filteredTitles = titlesArray.filter(title => {
               if (userType === 'student') {
-                return !['Teachers', 'Class Routine', 'Notice'].includes(title.title);
+                return !['Teachers', 'Class Routine', 'Notice', 'Events', 'Add Class'].includes(title.title);
               }
               return true;
             });
