@@ -7,6 +7,9 @@ const Students = () => {
   const [students, setStudents] = useState([]);
   const [classes, setClasses] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [sortColumn, setSortColumn] = useState('');
+  const [sortOrder, setSortOrder] = useState('asc');
 
   useEffect(() => {
     const fetchStudentsAndClasses = async () => {
@@ -53,10 +56,31 @@ const Students = () => {
   }, []);
 
   // Filter students based on matching studentClass and className, and studentId starts with "STID"
-  const filteredStudents = students.filter(student => 
+  const filteredStudents = students.filter(student =>
     student.studentId?.startsWith('STID') &&
-    classes.some(cls => cls.className === student.studentClass)
+    classes.some(cls => cls.className === student.studentClass) &&
+    (student.studentId.toLowerCase().includes(searchTerm.toLowerCase()) ||
+     student.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+     student.studentClass.toLowerCase().includes(searchTerm.toLowerCase()) ||
+     student.gradeLevel.toLowerCase().includes(searchTerm.toLowerCase()) ||
+     student.graduationYear.toLowerCase().includes(searchTerm.toLowerCase()))
   );
+
+  // Sort students by selected column
+  const sortedStudents = filteredStudents.sort((a, b) => {
+    if (!sortColumn) return 0;
+    const valA = a[sortColumn].toLowerCase();
+    const valB = b[sortColumn].toLowerCase();
+    if (valA < valB) return sortOrder === 'asc' ? -1 : 1;
+    if (valA > valB) return sortOrder === 'asc' ? 1 : -1;
+    return 0;
+  });
+
+  const handleSort = (column) => {
+    const order = sortColumn === column && sortOrder === 'asc' ? 'desc' : 'asc';
+    setSortColumn(column);
+    setSortOrder(order);
+  };
 
   if (isLoading) {
     return (
@@ -66,26 +90,38 @@ const Students = () => {
     );
   }
 
-  if (filteredStudents.length === 0) {
+  if (sortedStudents.length === 0) {
     return <div className="text-center mt-4">No students found.</div>;
   }
 
   return (
     <div className="w-full text-sm p-6 bg-white">
       <h2 className="text-xl font-semibold mb-4">My Students</h2>
+      <input
+        type="text"
+        placeholder="Search by Student ID, Email, Class, Level, or Year"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        className="mb-4 p-2 border border-gray-300 rounded w-full"
+      />
       <div className="overflow-x-auto">
         <table className="min-w-full text-left border-collapse">
           <thead>
             <tr>
-              <th className="p-2 border-b">Student ID</th>
-              <th className="p-2 border-b">Student Class</th>
-              <th className="p-2 border-b">Student Level</th>
-              <th className="p-2 border-b">Graduation Year</th>
-              <th className="p-2 border-b">Email</th>
+              {['studentId', 'studentClass', 'gradeLevel', 'graduationYear', 'email'].map((column) => (
+                <th
+                  key={column}
+                  className="p-2 border-b cursor-pointer text-blue-400 uppercase"
+                  onClick={() => handleSort(column)}
+                >
+                  {column.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
+                  {sortColumn === column && (sortOrder === 'asc' ? ' ▲' : ' ▼')}
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody>
-            {filteredStudents.map(student => (
+            {sortedStudents.map(student => (
               <tr key={student.id}>
                 <td className="p-2 border-b">{student.studentId || 'N/A'}</td>
                 <td className="p-2 border-b">{student.studentClass || 'N/A'}</td>
