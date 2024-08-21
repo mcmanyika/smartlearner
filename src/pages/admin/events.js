@@ -1,8 +1,8 @@
 import React from 'react';
-import AdminLayout from './admin/adminLayout';
-import AddEventsForm from '../app/components/admin/AddEventsForm';
-import EventsList from '../app/components/admin/EventsList';
-import withAuth from '../../utils/withAuth';
+import AdminLayout from './adminLayout';
+import AddEventsForm from '../../app/components/admin/AddEventsForm';
+import EventsList from '../../app/components/admin/EventsList';
+import withAuth from '../../../utils/withAuth';
 
 function Events() {
   return (

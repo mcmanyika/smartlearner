@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ref, onValue } from 'firebase/database';
 import { database } from '../../../../../utils/firebaseConfig';
 import { FaSpinner } from 'react-icons/fa';
@@ -10,6 +10,10 @@ const Students = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortColumn, setSortColumn] = useState('');
   const [sortOrder, setSortOrder] = useState('asc');
+  const [selectedStudent, setSelectedStudent] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const modalRef = useRef(null); // Reference for the modal content
 
   useEffect(() => {
     const fetchStudentsAndClasses = async () => {
@@ -17,13 +21,12 @@ const Students = () => {
         const studentsRef = ref(database, 'students');
         const classesRef = ref(database, 'classes');
 
-        // Fetch students data
         onValue(studentsRef, (snapshot) => {
           const studentsData = snapshot.val();
           if (studentsData) {
             const studentsArray = Object.keys(studentsData).map(key => ({
               id: key,
-              ...studentsData[key] // Adjusting to fetch all data
+              ...studentsData[key]
             }));
             setStudents(studentsArray);
           } else {
@@ -31,13 +34,12 @@ const Students = () => {
           }
         });
 
-        // Fetch classes data
         onValue(classesRef, (snapshot) => {
           const classesData = snapshot.val();
           if (classesData) {
             const classesArray = Object.keys(classesData).map(key => ({
               id: key,
-              ...classesData[key] // Adjusting to fetch all data
+              ...classesData[key]
             }));
             setClasses(classesArray);
           } else {
@@ -55,7 +57,6 @@ const Students = () => {
     fetchStudentsAndClasses();
   }, []);
 
-  // Filter students based on matching studentClass and className, and studentId starts with "STID"
   const filteredStudents = students.filter(student =>
     student.studentId?.startsWith('STID') &&
     classes.some(cls => cls.className === student.studentClass) &&
@@ -66,7 +67,6 @@ const Students = () => {
      student.graduationYear.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
-  // Sort students by selected column
   const sortedStudents = filteredStudents.sort((a, b) => {
     if (!sortColumn) return 0;
     const valA = a[sortColumn].toLowerCase();
@@ -82,6 +82,31 @@ const Students = () => {
     setSortOrder(order);
   };
 
+  const openModal = (student) => {
+    setSelectedStudent(student);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedStudent(null);
+  };
+
+  const handleClickOutside = (e) => {
+    if (modalRef.current && !modalRef.current.contains(e.target)) {
+      closeModal();
+    }
+  };
+
+  useEffect(() => {
+    if (isModalOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isModalOpen]);
+
   if (isLoading) {
     return (
       <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-200 bg-opacity-75 z-50">
@@ -95,7 +120,7 @@ const Students = () => {
   }
 
   return (
-    <div className="w-full text-sm p-6 bg-white">
+    <div className="w-full text-sm p-4 bg-white">
       <h2 className="text-xl font-semibold mb-4">My Students</h2>
       <input
         type="text"
@@ -111,7 +136,7 @@ const Students = () => {
               {['studentId', 'studentClass', 'gradeLevel', 'graduationYear', 'email'].map((column) => (
                 <th
                   key={column}
-                  className="p-2 border-b cursor-pointer text-blue-400 uppercase"
+                  className="p-2 border-b cursor-pointer text-blue-400 uppercase text-xs"
                   onClick={() => handleSort(column)}
                 >
                   {column.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
@@ -122,7 +147,7 @@ const Students = () => {
           </thead>
           <tbody>
             {sortedStudents.map(student => (
-              <tr key={student.id}>
+              <tr key={student.id} className="hover:bg-gray-100 cursor-pointer" onClick={() => openModal(student)}>
                 <td className="p-2 border-b">{student.studentId || 'N/A'}</td>
                 <td className="p-2 border-b">{student.studentClass || 'N/A'}</td>
                 <td className="p-2 border-b capitalize">{student.gradeLevel || 'N/A'}</td>
@@ -133,6 +158,21 @@ const Students = () => {
           </tbody>
         </table>
       </div>
+
+      {isModalOpen && selectedStudent && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div ref={modalRef} className="bg-white p-6 rounded-lg max-w-md w-full">
+            <h3 className="text-xl font-semibold mb-4">Student Details</h3>
+            <p><strong>ID:</strong> {selectedStudent.studentId}</p>
+            <p><strong>Class:</strong> {selectedStudent.studentClass}</p>
+            <p><strong>Level:</strong> {selectedStudent.gradeLevel}</p>
+            <p><strong>Graduation Year:</strong> {selectedStudent.graduationYear}</p>
+            <p><strong>Email:</strong> {selectedStudent.email}</p>
+            {/* Add more details if available */}
+            <button onClick={closeModal} className="mt-4 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">Close</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

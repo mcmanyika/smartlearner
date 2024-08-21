@@ -1,8 +1,8 @@
 import React from 'react';
-import AdminLayout from './admin/adminLayout';
-import UploadClassNameForm from '../app/components/teachers/UploadClassNameForm';
-import withAuth from '../../utils/withAuth';
-import TeacherClasses from '../app/components/teachers/TeacherClasses';
+import AdminLayout from './adminLayout';
+import UploadClassNameForm from '../../app/components/teachers/UploadClassNameForm';
+import withAuth from '../../../utils/withAuth';
+import TeacherClasses from '../../app/components/teachers/TeacherClasses';
 
 function AddClasses() {
   return (

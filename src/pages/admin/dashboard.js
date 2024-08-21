@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
-import withAuth from '../../utils/withAuth';
+import withAuth from '../../../utils/withAuth';
 import { FaSpinner } from 'react-icons/fa';
 import { useRouter } from 'next/router';
-import { database } from '../../utils/firebaseConfig';
+import { database } from '../../../utils/firebaseConfig';
 import { ref, get } from 'firebase/database';
 import StudentDash from './student_dash';
 import TeacherDashboard from './teachers_dashboard';
@@ -35,7 +35,7 @@ const Dashboard = () => {
             }
           } else {
             // Redirect to /user if the user is not found in userTypes
-            router.push('/user');
+            router.push('/admin/user');
           }
         } catch (error) {
           console.error('Error fetching user type:', error);
@@ -56,12 +56,9 @@ const Dashboard = () => {
   }
 
   return (
-    <div>
+    <>
       {selectedComponent}
-      <div className="mt-4 text-center">
-        {userType && <p>User Type: {userType}</p>}
-      </div>
-    </div>
+    </>
   );
 };
 

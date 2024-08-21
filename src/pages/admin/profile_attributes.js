@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { ref, set } from 'firebase/database';
-import { database } from '../../utils/firebaseConfig'; // Adjust the path as necessary
-import SmartBlankLayout from '../app/components/SmartBlankLayout';
+import { database } from '../../../utils/firebaseConfig'; // Adjust the path as necessary
+import SmartBlankLayout from '../../app/components/SmartBlankLayout';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useRouter } from 'next/router';
-import { useGlobalState } from '../app/store'; // Adjust the path as necessary
+import { useGlobalState } from '../../app/store'; // Adjust the path as necessary
 import { useSession } from 'next-auth/react'; // Import useSession for accessing session data
 
 const ProfileAttributes = () => {

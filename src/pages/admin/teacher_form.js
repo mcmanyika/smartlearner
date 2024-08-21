@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { ref, set } from 'firebase/database';
-import { database } from '../../utils/firebaseConfig';
-import SmartBlankLayout from '../app/components/SmartBlankLayout';
+import { database } from '../../../utils/firebaseConfig';
+import SmartBlankLayout from '../../app/components/SmartBlankLayout';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
-import { useGlobalState } from '../app/store';
+import { useGlobalState } from '../../app/store';
 
 const generateTeacherId = () => {
   return `TEID-${Math.floor(Math.random() * 1000000).toString().padStart(6, '0')}`;

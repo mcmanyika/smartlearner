@@ -7,16 +7,15 @@ import { useGlobalState } from '../../store';
 
 const NoticeCount = () => {
   const [totalNotices, setTotalNotices] = useState(0);
-  const [totalEvents, setTotalEvents] = useState(0); // Separate state for events count
-  const [routineCount] = useGlobalState('routineCount'); // Access routineCount from global state
+  const [totalEvents, setTotalEvents] = useState(0);
+  const [routineCount] = useGlobalState('routineCount');
 
   useEffect(() => {
     const noticesRef = ref(database, 'notices');
-    const eventsRef = ref(database, 'events'); // Assuming you have an events node in your database
+    const eventsRef = ref(database, 'events');
 
     const currentDate = new Date();
 
-    // Fetch notices
     const unsubscribeNotices = onValue(noticesRef, (snapshot) => {
       if (snapshot.exists()) {
         const data = snapshot.val();
@@ -25,7 +24,6 @@ const NoticeCount = () => {
           ...data[key],
         }));
 
-        // Filter notices based on date
         const validNotices = noticesArray.filter(notice => {
           const noticeDate = new Date(notice.date);
           return noticeDate >= currentDate;
@@ -39,7 +37,6 @@ const NoticeCount = () => {
       console.error(`Error fetching notices: ${error.message}`);
     });
 
-    // Fetch events (if applicable)
     const unsubscribeEvents = onValue(eventsRef, (snapshot) => {
       if (snapshot.exists()) {
         const data = snapshot.val();
@@ -48,7 +45,6 @@ const NoticeCount = () => {
           ...data[key],
         }));
 
-        // Filter events based on date
         const validEvents = eventsArray.filter(event => {
           const eventDate = new Date(event.date);
           return eventDate >= currentDate;
@@ -62,7 +58,6 @@ const NoticeCount = () => {
       console.error(`Error fetching events: ${error.message}`);
     });
 
-    // Cleanup subscription on unmount
     return () => {
       unsubscribeNotices();
       unsubscribeEvents();
@@ -70,28 +65,28 @@ const NoticeCount = () => {
   }, []);
 
   return (
-    <div className="w-full flex flex-col md:flex-row text-center">
-      <div className="w-full md:w-1/3 flex bg-white border shadow-sm rounded m-2 mt-0 ml-0">
-        <div className='w-1/3 flex items-center justify-center p-4 md:p-2'>
-          <MdOutlineLibraryBooks className='w-16 h-16 rounded-full bg-blue-300 text-white p-2' />
+    <div className="w-full flex flex-col sm:flex-row text-center">
+      <div className="w-full sm:w-1/3 flex bg-white border shadow-sm rounded m-2">
+        <div className='w-1/3 flex items-center justify-center p-2'>
+          <MdOutlineLibraryBooks className='w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-blue-300 text-white p-2' />
         </div>
-        <div className="w-2/3 text-sm p-4 md:p-6 text-right">
+        <div className="w-2/3 text-xs sm:text-sm p-2 sm:p-4 text-right">
           Notifications <br />{totalNotices}
         </div>
       </div>
-      <div className="w-full md:w-1/3 flex bg-white border shadow-sm rounded m-2 mt-0 ml-0">
-        <div className='w-1/3 flex items-center justify-center p-4 md:p-2'>
-          <FaCalendarAlt className='w-16 h-16 rounded-full bg-orange-300 text-white p-2' />
+      <div className="w-full sm:w-1/3 flex bg-white border shadow-sm rounded m-2">
+        <div className='w-1/3 flex items-center justify-center p-2'>
+          <FaCalendarAlt className='w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-orange-300 text-white p-2' />
         </div>
-        <div className="w-2/3 text-sm p-4 md:p-6 text-right">
+        <div className="w-2/3 text-xs sm:text-sm p-2 sm:p-4 text-right">
           Events <br />{totalEvents}
         </div>
       </div>
-      <div className="w-full md:w-1/3 flex bg-white border shadow-sm rounded m-2 mt-0 ml-0 mr-2">
-        <div className='w-1/3 flex items-center justify-center p-4 md:p-2'>
-          <FaClipboardList className='w-16 h-16 rounded-full bg-purple-300 text-white p-2' />
+      <div className="w-full sm:w-1/3 flex bg-white border shadow-sm rounded m-2">
+        <div className='w-1/3 flex items-center justify-center p-2'>
+          <FaClipboardList className='w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-purple-300 text-white p-2' />
         </div>
-        <div className="w-2/3 text-sm p-4 md:p-6 text-right">
+        <div className="w-2/3 text-xs sm:text-sm p-2 sm:p-4 text-right">
           Upcoming Classes <br />{routineCount}
         </div>
       </div>

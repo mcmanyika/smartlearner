@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
-import withAuth from '../../utils/withAuth';
-import AdminLayout from './admin/adminLayout';
+import withAuth from '../../../utils/withAuth';
+import AdminLayout from './adminLayout';
 import { FaSpinner } from 'react-icons/fa';
-import NoticeCount from '../app/components/notice/NoticeCount';
-import ClassRoutine from '../app/components/student/ClassRoutine';
-import { database } from '../../utils/firebaseConfig';
+import NoticeCount from '../../app/components/notice/NoticeCount';
+import ClassRoutine from '../../app/components/student/ClassRoutine';
+import { database } from '../../../utils/firebaseConfig';
 import { ref, get } from 'firebase/database';
-import StudentDetails from '../app/components/student/StudentDetails';
+import StudentDetails from '../../app/components/student/StudentDetails';
 import { useRouter } from 'next/router';
-import { useGlobalState, setStudentClass,} from '../app/store';
+import { useGlobalState, setStudentClass,} from '../../app/store';
 
 const StudentDash = () => {
   const { data: session, status } = useSession();

@@ -31,7 +31,7 @@ const iconMapping = {
 
 const AdminLayout = ({ children }) => {
   const { data: session } = useSession();
-  const router = useRouter(); // Initialize router
+  const router = useRouter();
   const [isExpanded, setIsExpanded] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
@@ -76,8 +76,6 @@ const AdminLayout = ({ children }) => {
     fetchUserDetails();
   }, [session, globalStudentId, setUserType, setSchoolName]);
 
- 
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -100,7 +98,7 @@ const AdminLayout = ({ children }) => {
 
             const filteredTitles = titlesArray.filter(title => {
               if (userType === 'student') {
-                return !['Teachers', 'Class Routine', 'Notice', 'Events', 'Add Class'].includes(title.title);
+                return !['Teachers', 'Class Routine', 'Notice', 'Events', 'Add Class', 'Admmision'].includes(title.title);
               }
               return true;
             });
@@ -131,7 +129,7 @@ const AdminLayout = ({ children }) => {
 
   return (
     <div className="flex min-h-screen text-base bg-gray-100 relative">
-      <aside className={`fixed z-40 transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 md:relative md:translate-x-0 ${isExpanded ? 'w-72' : 'w-16'} bg-blue-400 text-white p-4 min-w-h-screen`}>
+      <aside className={`fixed z-40 transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 md:relative md:translate-x-0 ${isExpanded ? 'w-72' : 'w-16'} bg-blue-400 text-white p-4 min-h-screen`}>
         <div className="flex justify-between items-center mb-6">
           {isExpanded && <h2 className="text-lg font-thin">{schoolName}</h2>}
           <FaBars className="cursor-pointer text-2xl" onClick={toggleSidebar} />
@@ -147,14 +145,12 @@ const AdminLayout = ({ children }) => {
                 const IconComponent = iconMapping[rw.icon];
                 return (
                   <li key={rw.id} className="mb-4 flex items-center">
-                    <Link href={rw.link}>
+                    <Link href={rw.link} className="flex items-center">
                       <IconComponent className="mr-2 text-2xl" />
-                    </Link>
-                    {isExpanded && (
-                      <Link href={rw.link}>
+                      {isExpanded && (
                         <div className="block p-2 hover:bg-blue-500 rounded cursor-pointer">{rw.title}</div>
-                      </Link>
-                    )}
+                      )}
+                    </Link>
                   </li>
                 );
               })}
@@ -185,7 +181,7 @@ const AdminLayout = ({ children }) => {
             <h1 className="text-lg">{schoolName}</h1>
           </div>
         </header>
-        <main className="flex-1 p-6">
+        <main className="flex-1 p-4 md:p-6">
           <div className="w-full text-right p-2 border shadow-sm rounded-md flex items-center justify-end relative">
             {session && (
               <div className="flex items-center">
@@ -194,7 +190,7 @@ const AdminLayout = ({ children }) => {
                   <Image src={session.user.image} alt="Profile" width={50} height={50} className="object-cover" />
                 </div>
                 {isPopoverOpen && (
-                  <div className="absolute right-0 mt-40 w-48 bg-white shadow-lg rounded-lg p-4">
+                  <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-lg p-4">
                     <Link href="/">
                       <div className="flex items-center text-sm text-left cursor-pointer hover:bg-gray-200 rounded p-2">
                         <FaHome className="mr-2" />
@@ -213,7 +209,7 @@ const AdminLayout = ({ children }) => {
           <Breadcrumb />
           {children}
         </main>
-        <div className='p-6'>
+        <div className='p-4 md:p-6'>
           <Footer />
         </div>
         <AIAssistantForm />
