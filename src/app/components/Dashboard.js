@@ -36,12 +36,12 @@ const Dashboard = () => {
             </div>
           </div>
           {/* Sign In Button Positioned at the Top Right */}
-          <button
+          {/* <button
             onClick={() => signIn('google')}
             className="absolute top-4 right-4 text-white text-sm bg-gray-400 p-2 rounded-full hover:bg-blue-600 uppercase"
           >
             Sign In
-          </button>
+          </button> */}
         </section>
       )}
     </>
