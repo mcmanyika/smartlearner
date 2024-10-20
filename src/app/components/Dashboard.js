@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { signIn, useSession } from 'next-auth/react';
 import Hero from '../components/Hero';
+import ContactUs from '../components/libs/ContactUs'
 
 const Dashboard = () => {
   const { data: session } = useSession();
@@ -45,7 +46,7 @@ const Dashboard = () => {
               {content === 'getintouch' && (
                 <div id="getintouch" className="w-full">
                   <h1 className="text-4xl">Get in touch</h1>
-                  <p className="text-lg">This is the get in touch section.</p>
+                  <ContactUs />
                 </div>
               )}
 
@@ -87,9 +88,9 @@ const Dashboard = () => {
                     </svg>
                   </button>
               </div>
-              <div className='w-36'>
+              <div className='w-36 pt-1'>
               <button onClick={() => handleButtonClick('getintouch')}>Get in touch</button></div>
-              <div className='w-36'><button onClick={() => handleButtonClick('coffee')}>Buy us coffee</button></div>
+              {/* <div className='w-36'><button onClick={() => handleButtonClick('coffee')}>Partner</button></div> */}
               </div>
               </div>
             </div>
