@@ -22,7 +22,8 @@ const Dashboard = () => {
     <>
       {!session && (
         <section className="flex flex-col md:flex-row items-center justify-center text-center min-h-screen relative">
-          <div className="flex-1 w-full h-full">
+          <div className="hidden md:block flex-1 w-full h-full">
+            {/* Hide Hero component on mobile and show on medium screens and above */}
             <Hero />
           </div>
           <div id="content" className="flex-1 p-8 flex flex-col justify-between">
