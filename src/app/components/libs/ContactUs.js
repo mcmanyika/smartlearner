@@ -121,7 +121,7 @@ const ContactUs = () => {
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
                 required
-                className="w-full p-2 pl-6 border rounded-full"
+                className="w-full p-2 pl-6 pr-6 border rounded-full"
               >
                 <option value="" disabled>Select Category</option>
                 <option value="Technical">Technical</option>
