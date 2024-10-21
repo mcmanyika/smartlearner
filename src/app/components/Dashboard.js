@@ -62,10 +62,10 @@ const Dashboard = () => {
 
           {/* Footer Links */}
           <div className="fixed bottom-0 left-0 w-full bg-transparent p-4">
-            <div className="flex justify-around text-xs">
-              <div className='flex-1'></div>
+            <div className="md:flex justify-around text-xs">
+              <div className='w-full md:flex-1'></div>
               {/* Menu Icon for Home */}
-              <div className='flex-1'>
+              <div className='w-full md:flex-1'>
                 <div className='flex'>
                 <div className=''>
                   <button
