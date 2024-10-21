@@ -30,7 +30,7 @@ const Dashboard = () => {
               {/* Conditionally render the home or blank div */}
               {content === 'home' && (
                 <div id="home" className="w-full">
-                  <h1 className="text-5xl font-bold uppercase mb-4">Smart Learner</h1>
+                  <h1 className="text-2xl md:text-5xl font-bold uppercase mb-4">Smart Learner</h1>
                   <p className="text-lg capitalize mb-8">Powering schools to future of learning.</p>
                 </div>
               )}
