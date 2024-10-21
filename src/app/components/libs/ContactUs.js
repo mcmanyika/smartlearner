@@ -11,6 +11,7 @@ const ContactUs = () => {
   const [email, setEmail] = useState('');
   const [mobile, setMobile] = useState('');
   const [message, setMessage] = useState('');
+  const [category, setCategory] = useState(''); // Added category state
   const [contactInfo, setContactInfo] = useState({ email: '', mobile: '' });
 
   // Fetch email and mobile from the account table
@@ -52,6 +53,7 @@ const ContactUs = () => {
       email,
       mobile,
       message,
+      category, // Include the selected category
       submittedAt: new Date().toISOString(),
     };
 
@@ -62,6 +64,7 @@ const ContactUs = () => {
       setEmail('');
       setMobile('');
       setMessage('');
+      setCategory(''); // Reset category
     } catch (error) {
       console.error('Error submitting form: ', error);
       toast.error('Failed to submit form. Please try again.');
@@ -69,10 +72,10 @@ const ContactUs = () => {
   };
 
   return (
-    <div className=" p-10">
+    <div className="p-10">
       <div className="md:container mx-auto flex flex-col md:flex-row text-gray-500 font-thin">
         <div className="flex-1 flex flex-col justify-center">
-          <form onSubmit={handleSubmit} className="md:p-8  font-thin w-full">
+          <form onSubmit={handleSubmit} className="md:p-8 font-thin w-full">
             <div className="mb-4">
               <input
                 id="name"
@@ -80,8 +83,8 @@ const ContactUs = () => {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
-                placeholder='Full Name'
-                className="w-full p-2 border rounded-full"
+                placeholder="Full Name"
+                className="w-full p-2 pl-6 border rounded-full"
               />
             </div>
 
@@ -94,8 +97,8 @@ const ContactUs = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  placeholder='Email'
-                  className="w-full p-2 border rounded-full"
+                  placeholder="Email"
+                  className="w-full p-2 pl-6 border rounded-full"
                 />
               </div>
               <div className="mb-4 w-full md:w-1/2">
@@ -106,25 +109,43 @@ const ContactUs = () => {
                   onChange={(e) => setMobile(e.target.value)}
                   required
                   placeholder="Mobile"
-                  className="w-full p-2 border rounded-full"
+                  className="w-full p-2 pl-6 border rounded-full"
                 />
               </div>
             </div>
 
+            {/* Category Dropdown */}
             <div className="mb-4">
-              <label className="block text-sm font-bold mb-2" htmlFor="message">Message</label>
+              <select
+                id="category"
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                required
+                className="w-full p-2 pl-6 border rounded-full"
+              >
+                <option value="" disabled>Select Category</option>
+                <option value="Technical">Technical</option>
+                <option value="School Application">School Application</option>
+                <option value="Feedback">Feedback</option>
+                <option value="School Partnerships">School Partnerships</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+
+            <div className="mb-4">
               <textarea
                 id="message"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 required
-                className="w-full p-2 border rounded-full"
+                className="w-full p-2 pl-6 border rounded-full"
+                placeholder='Message'
               ></textarea>
             </div>
 
             <button
               type="submit"
-              className="w-full p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+              className="w-full p-2  bg-blue-500 text-white rounded-md hover:bg-blue-600"
             >
               Submit
             </button>
