@@ -121,7 +121,7 @@ const SchoolListings = () => {
             <p>No schools found.</p>
           ) : (
             <>
-              <div className="grid grid-cols-1 gap-6">
+              <div className="grid grid-cols-1 gap-3">
                 {/* Display number of schools found */}
                 <h1 className="text-2xl pl-12"><strong>{filteredSchools.length}</strong> Schools Found</h1>
                 {currentSchools.map(({ id, schoolName, location, curriculum, feeRange, ownership }) => (
