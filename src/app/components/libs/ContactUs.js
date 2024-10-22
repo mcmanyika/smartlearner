@@ -72,10 +72,10 @@ const ContactUs = () => {
   };
 
   return (
-    <div className="p-10">
+    <div className="p-2">
       <div className="md:container mx-auto flex flex-col md:flex-row text-gray-500 font-thin">
         <div className="flex-1 flex flex-col justify-center">
-          <form onSubmit={handleSubmit} className="md:p-8 font-thin w-full">
+          <form onSubmit={handleSubmit} className="font-thin w-full">
             <div className="mb-4">
               <input
                 id="name"

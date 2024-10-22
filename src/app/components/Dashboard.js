@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { signIn, useSession } from 'next-auth/react';
 import Hero from '../components/Hero';
 import ContactUs from '../components/libs/ContactUs'
+import AddSchool from '../components/libs/AddSchool'
 
 const Dashboard = () => {
   const { data: session } = useSession();
@@ -26,7 +27,7 @@ const Dashboard = () => {
             {/* Hide Hero component on mobile and show on medium screens and above */}
             <Hero />
           </div>
-          <div id="content" className="flex-1 p-8 flex flex-col justify-between">
+          <div id="content" className="flex-1 p-4 flex flex-col justify-between">
             <>
               {/* Conditionally render the home or blank div */}
               {content === 'home' && (
@@ -38,8 +39,7 @@ const Dashboard = () => {
 
               {content === 'claim' && (
                 <div id="claim" className="w-full">
-                  <h1 className="text-4xl">Claim your school</h1>
-                  <p className="text-lg">This is the claim your school section.</p>
+                  <AddSchool />
                 </div>
               )}
 
@@ -88,6 +88,9 @@ const Dashboard = () => {
                       />
                     </svg>
                   </button>
+              </div>
+              <div className='w-36 pt-1'>
+              {/* <button onClick={() => handleButtonClick('claim')}>Add School</button> */}
               </div>
               <div className='w-36 pt-1'>
               <button onClick={() => handleButtonClick('getintouch')}>Get in touch</button></div>
