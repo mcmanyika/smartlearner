@@ -128,7 +128,7 @@ const AdminLayout = ({ children }) => {
   };
 
   return (
-    <div className="flex min-h-screen text-base bg-gray-100 relative">
+    <div className="flex min-h-screen text-base bg-white relative">
       <aside className={`fixed z-40 transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 md:relative md:translate-x-0 ${isExpanded ? 'w-72' : 'w-16'} bg-blue-400 text-white p-4 min-h-screen`}>
         <div className="flex justify-between items-center mb-6">
           {isExpanded && <h2 className="text-lg font-thin">{schoolName}</h2>}
@@ -181,8 +181,8 @@ const AdminLayout = ({ children }) => {
             <h1 className="text-lg">{schoolName}</h1>
           </div>
         </header>
-        <main className="flex-1 p-4 md:p-6">
-          <div className="w-full text-right p-2 border shadow-sm rounded-md flex items-center justify-end relative">
+        <main className="flex-1">
+          {/* <div className="w-full text-right p-2 border shadow-sm rounded-md flex items-center justify-end relative">
             {session && (
               <div className="flex items-center">
                 <span className="text-sm mr-2">{session.user.name}</span>
@@ -205,14 +205,14 @@ const AdminLayout = ({ children }) => {
                 )}
               </div>
             )}
-          </div>
-          <Breadcrumb />
+          </div> */}
+          {/* <Breadcrumb /> */}
           {children}
         </main>
-        <div className='p-4 md:p-6'>
+        {/* <div className='p-2'>
           <Footer />
-        </div>
-        <AIAssistantForm />
+        </div> */}
+        {/* <AIAssistantForm /> */}
       </div>
     </div>
   );

@@ -15,7 +15,7 @@ const SchoolListings = () => {
 
   // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
-  const schoolsPerPage = 5; // Number of schools per page
+  const schoolsPerPage = 10; // Number of schools per page
 
   // Static filter options
   const feeRanges = ["Less than $100", "$101 - $500", "$501 - $1000", "$1001 - $3000", "Plus $3001"];
@@ -98,12 +98,12 @@ const SchoolListings = () => {
   );
 
   return (
-    <div className="container p-4 bg-white text-sm rounded-lg">
+    <div className="w-full p-4 pt-0 pb-0 bg-white text-sm">
       {/* Layout with filters and school listings */}
       <div className="flex">
         {/* Filters Section */}
-        <div className="w-1/4 mr-10 border-r-4">
-          <h3 className="text-md font-bold m-4">Refine Your Search:</h3>
+        <div className="w-1/6 mr-10 border-0 rounded-tr-lg border-r-4">
+          <h3 className="text-md font-bold mt-20  m-4">Refine Your Search:</h3>
           <div className="grid grid-cols-1 mr-6 gap-4">
             {renderFilterInput("School Name", filterName, setFilterName)}
             {renderDropdown("Location", filterLocation, setFilterLocation, provinces)}
@@ -114,16 +114,18 @@ const SchoolListings = () => {
         </div>
 
         {/* School Listings Section */}
-        <div className="w-3/4">
+        <div className="w-5/6">
           {loading ? (
             <p>Loading schools...</p>
           ) : currentSchools.length === 0 ? (
             <p>No schools found.</p>
           ) : (
             <>
-              <div className="grid grid-cols-1 gap-3">
+              <div className=" p-6">
+                <h1 className="text-2xl pl-12"><strong>{filteredSchools.length}</strong> Schools found</h1>
+              </div>
+              <div id="listing" className="grid grid-cols-1 gap-3 overflow-y-auto h-[56rem] mb-0 scrollbar-none">
                 {/* Display number of schools found */}
-                <h1 className="text-2xl pl-12"><strong>{filteredSchools.length}</strong> Schools Found</h1>
                 {currentSchools.map(({ id, schoolName, location, curriculum, feeRange, ownership }) => (
                   <div key={id} className=" border border-gray-200 hover:shadow cursor-pointer p-5 rounded-3xl">
                     <div className="w-full flex">
@@ -134,24 +136,24 @@ const SchoolListings = () => {
                             <p>{ownership}</p>
                         </div>
                         <div className="w-1/4 flex items-end justify-end">
-                        <button className="p-2 bg-slate-200 rounded-full">{feeRange}</button></div>
+                        <button className="p-2 bg-slate-200 rounded-l-full">{feeRange}</button>
+                        <button className="p-2 bg-blue-400 text-white rounded-r-full">Visit Site</button>
+                        </div>
                     </div>
-                    
                   </div>
                 ))}
-              </div>
-
-              {/* Pagination Controls */}
-              <div className="flex justify-end mt-4 space-x-2">
-                {Array.from({ length: totalPages }, (_, index) => (
-                  <button
-                    key={index + 1}
-                    onClick={() => handlePageChange(index + 1)}
-                    className={`px-4 py-2 rounded-full ${currentPage === index + 1 ? 'bg-blue-500 text-white' : 'bg-gray-300 text-black'}`}
-                  >
-                    {index + 1}
-                  </button>
-                ))}
+                {/* Pagination Controls */}
+                <div className="flex justify-end mt-4 space-x-2">
+                  {Array.from({ length: totalPages }, (_, index) => (
+                    <button
+                      key={index + 1}
+                      onClick={() => handlePageChange(index + 1)}
+                      className={`px-4 py-2 rounded-full ${currentPage === index + 1 ? 'bg-blue-500 text-white' : 'bg-gray-300 text-black'}`}
+                    >
+                      {index + 1}
+                    </button>
+                  ))}
+                </div>
               </div>
             </>
           )}
