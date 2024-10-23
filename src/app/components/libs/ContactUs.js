@@ -72,8 +72,7 @@ const ContactUs = () => {
   };
 
   return (
-    <div className="p-2">
-      <div className="md:container mx-auto flex flex-col md:flex-row text-gray-500 font-thin">
+      <div className="md:container p-32 mx-auto flex flex-col md:flex-row text-gray-500 font-thin">
         <div className="flex-1 flex flex-col justify-center">
           <form onSubmit={handleSubmit} className="font-thin w-full">
             <div className="mb-4">
@@ -87,7 +86,6 @@ const ContactUs = () => {
                 className="w-full p-2 pl-6 border rounded-full"
               />
             </div>
-
             {/* Flex container for email and mobile */}
             <div className="flex flex-col md:flex-row md:space-x-4">
               <div className="mb-4 w-full md:w-1/2">
@@ -164,7 +162,6 @@ const ContactUs = () => {
           />
         </div>
       </div>
-    </div>
   );
 };
 

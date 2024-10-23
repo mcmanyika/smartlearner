@@ -92,15 +92,15 @@ const Dashboard = () => {
                     </svg>
                   </button>
               </div>
-              {/* <div className='w-36 pt-1'>
-                <button onClick={() => handleButtonClick('claim')}>Add School</button>
-              </div> */}
               <div className='w-36 pt-1'>
                 <button onClick={() => schoolsClick('schools')}>Schools</button>
               </div>
               <div className='w-36 pt-1'>
               <button onClick={() => handleButtonClick('getintouch')}>Get in touch</button></div>
               {/* <div className='w-36'><button onClick={() => handleButtonClick('coffee')}>Partner</button></div> */}
+              {/* <div className='w-36 pt-1'>
+                <button onClick={() => handleButtonClick('claim')}>Add School</button>
+              </div> */}
               </div>
               </div>
             </div>
