@@ -9,9 +9,9 @@ const AddSchool = () => {
   const [location, setLocation] = useState("");
   const [curriculum, setCurriculum] = useState("");
   const [feeRange, setFeeRange] = useState("");
-  const [ownership, setOwnership] = useState(""); // State for ownership type
+  const [ownership, setOwnership] = useState(""); 
+  const [website, setWebsite] = useState(""); // State for the website field
 
-  // Zimbabwean provinces
   const provinces = [
     "Harare",
     "Bulawayo",
@@ -24,7 +24,6 @@ const AddSchool = () => {
     "Matabeleland South",
   ];
 
-  // Fee range options
   const feeRanges = [
     "Less than $100",
     "$101 - $500",
@@ -33,14 +32,12 @@ const AddSchool = () => {
     "Plus $3001",
   ];
 
-  // Ownership options
   const ownershipOptions = [
     "Government",
     "Council",
     "Private",
   ];
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -49,25 +46,23 @@ const AddSchool = () => {
       location,
       curriculum,
       feeRange,
-      ownership, // Include ownership in the new school data
+      ownership,
+      website, // Include the website in the new school data
     };
 
     try {
-      // Save data to Firebase database
       await push(ref(database, "schools"), newSchool);
 
-      // Clear the form fields after successful submission
       setSchoolName("");
       setLocation("");
       setCurriculum("");
       setFeeRange("");
-      setOwnership(""); // Clear ownership field
+      setOwnership("");
+      setWebsite(""); // Clear the website field
 
-      // Show success toast notification
       toast.success("School added successfully!");
     } catch (error) {
       console.error("Error adding school:", error);
-      // Show error toast notification
       toast.error("Error adding school. Please try again.");
     }
   };
@@ -158,6 +153,19 @@ const AddSchool = () => {
               </option>
             ))}
           </select>
+        </div>
+
+        {/* Website */}
+        <div className="mb-4">
+          <input
+            type="url"
+            id="website"
+            value={website}
+            onChange={(e) => setWebsite(e.target.value)}
+            required
+            className="w-full p-2 pl-6 pr-6 border rounded-full"
+            placeholder="School website URL"
+          />
         </div>
 
         <button

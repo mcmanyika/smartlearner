@@ -55,9 +55,11 @@ const SchoolListings = () => {
     );
   };
 
-  // Memoized filtered schools
+  // Memoized filtered and sorted schools
   const filteredSchools = useMemo(() => {
-    return schools.filter(filterSchools);
+    return schools
+      .filter(filterSchools)
+      .sort((a, b) => a.schoolName.localeCompare(b.schoolName));
   }, [schools, filterName, filterLocation, filterCurriculum, filterFeeRange, filterOwnership]);
 
   // Calculate pagination
@@ -116,29 +118,36 @@ const SchoolListings = () => {
         {/* School Listings Section */}
         <div className="w-5/6">
           {loading ? (
-            <p>Loading schools...</p>
+            <p></p>
           ) : currentSchools.length === 0 ? (
             <p>No schools found.</p>
           ) : (
-            <>
-              <div className=" p-6">
-                <h1 className="text-2xl pl-12"><strong>{filteredSchools.length}</strong> Schools found</h1>
+            <div className="pb-0 mb-0">
+              <div className="p-6">
+                <h1 className="text-2xl font-thin pl-12"><strong>{filteredSchools.length}</strong> Schools found</h1>
               </div>
-              <div id="listing" className="grid grid-cols-1 gap-3 overflow-y-auto h-[56rem] mb-0 scrollbar-none">
+              <div id="listing" className="grid grid-cols-1  mb-0 scrollbar-none">
+                <div className=" overflow-y-auto h-[56rem]">
                 {/* Display number of schools found */}
-                {currentSchools.map(({ id, schoolName, location, curriculum, feeRange, ownership }) => (
-                  <div key={id} className=" border border-gray-200 hover:shadow cursor-pointer p-5 rounded-3xl">
+                {currentSchools.map(({ id, schoolName, location, curriculum, feeRange, ownership, website }) => (
+                  <div key={id} className="border border-gray-200 mb-3 hover:shadow p-5 rounded-3xl">
                     <div className="w-full flex">
-                        <div className="w-3/4">
-                            <h2 className="text-md font-semibold mb-2">{schoolName}</h2>
-                            <p>{location}</p>
-                            <p>{curriculum}</p>
-                            <p>{ownership}</p>
-                        </div>
-                        <div className="w-1/4 flex items-end justify-end">
+                      <div className="w-3/4">
+                        <h2 className="text-md font-semibold mb-2">{schoolName}</h2>
+                        <p>{location}</p>
+                        <p>{curriculum}</p>
+                        <p>{ownership}</p>
+                      </div>
+                      <div className="w-1/4 flex items-end justify-end">
                         <button className="p-2 bg-slate-200 rounded-l-full">{feeRange}</button>
-                        <button className="p-2 bg-blue-400 text-white rounded-r-full">Visit Site</button>
-                        </div>
+                        <button
+                          className="p-2 bg-blue-400 text-white rounded-r-full"
+                          onClick={() => window.open(website, '_blank')} // Opens the website in a new tab
+                          disabled={!website} // Disables the button if no website is provided
+                        >
+                          Visit Site
+                        </button>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -154,8 +163,9 @@ const SchoolListings = () => {
                     </button>
                   ))}
                 </div>
+                </div>
               </div>
-            </>
+            </div>
           )}
         </div>
       </div>

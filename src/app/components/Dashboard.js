@@ -18,6 +18,9 @@ const Dashboard = () => {
   const handleButtonClick = (type) => {
     setContent(type); // Update the state based on which button is clicked
   };
+  const schoolsClick = (type) => {
+    window.location.href = '/libs/schools';
+  };
 
   return (
     <>
@@ -92,6 +95,9 @@ const Dashboard = () => {
               {/* <div className='w-36 pt-1'>
                 <button onClick={() => handleButtonClick('claim')}>Add School</button>
               </div> */}
+              <div className='w-36 pt-1'>
+                <button onClick={() => schoolsClick('schools')}>Schools</button>
+              </div>
               <div className='w-36 pt-1'>
               <button onClick={() => handleButtonClick('getintouch')}>Get in touch</button></div>
               {/* <div className='w-36'><button onClick={() => handleButtonClick('coffee')}>Partner</button></div> */}
