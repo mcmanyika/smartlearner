@@ -122,6 +122,7 @@ const ContactUs = () => {
                 className="w-full p-2 pl-6 pr-6 border rounded-full"
               >
                 <option value="" disabled>Select Category</option>
+                <option value="Claim your school">Claim your school</option>
                 <option value="Technical">Technical</option>
                 <option value="School Application">School Application</option>
                 <option value="Feedback">Feedback</option>
