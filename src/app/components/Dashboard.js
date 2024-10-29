@@ -30,8 +30,8 @@ const Dashboard = () => {
             {/* Hide Hero component on mobile and show on medium screens and above */}
             <Hero />
           </div>
-          <div id="content" className="flex-1 p-4 flex flex-col justify-between">
-            <>
+          <div id="content" className="flex-1  flex flex-col justify-between">
+            <div className='w-full'>
               {/* Conditionally render the home or blank div */}
               {content === 'home' && (
                 <div id="home" className="w-full">
@@ -49,7 +49,7 @@ const Dashboard = () => {
               {/* Display get in touch section if 'getintouch' is clicked */}
               {content === 'getintouch' && (
                 <div id="getintouch" className="w-full">
-                  <h1 className="text-4xl">Get in touch</h1>
+                  <h1 className="text-4xl p-4">Get in touch</h1>
                   <ContactUs />
                 </div>
               )}
@@ -61,7 +61,7 @@ const Dashboard = () => {
                   <p className="text-lg">This is the buy us coffee section.</p>
                 </div>
               )}
-            </>
+            </div>
           </div>
 
           {/* Footer Links */}
@@ -98,9 +98,9 @@ const Dashboard = () => {
               </div>
               <div className='w-36 pt-1'>
               <button onClick={() => handleButtonClick('getintouch')}>Get in touch</button></div>
-              {/* <div className='w-36 pt-1'>
+              <div className='w-36 pt-1'>
                 <button onClick={() => handleButtonClick('claim')}>Add School</button>
-              </div> */}
+              </div>
               </div>
               </div>
             </div>

@@ -72,9 +72,8 @@ const ContactUs = () => {
   };
 
   return (
-      <div className="md:container p-32 mx-auto flex flex-col md:flex-row text-gray-500 font-thin">
-        <div className="flex-1 flex flex-col justify-center">
-          <form onSubmit={handleSubmit} className="font-thin w-full">
+      <div className="w-full md:max-w-3xl mx-auto  text-gray-500 font-thin">
+          <form onSubmit={handleSubmit} className="font-thin">
             <div className="mb-4">
               <input
                 id="name"
@@ -88,7 +87,7 @@ const ContactUs = () => {
             </div>
             {/* Flex container for email and mobile */}
             <div className="flex flex-col md:flex-row md:space-x-4">
-              <div className="mb-4 w-full md:w-1/2">
+              <div className="mb-4 w-full">
                 <input
                   id="email"
                   type="email"
@@ -99,7 +98,7 @@ const ContactUs = () => {
                   className="w-full p-2 pl-6 border rounded-full"
                 />
               </div>
-              <div className="mb-4 w-full md:w-1/2">
+              <div className="mb-4 w-full ">
                 <input
                   id="mobile"
                   type="tel"
@@ -161,7 +160,6 @@ const ContactUs = () => {
             pauseOnHover
             theme="dark"
           />
-        </div>
       </div>
   );
 };

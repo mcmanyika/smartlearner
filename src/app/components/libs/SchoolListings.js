@@ -15,7 +15,7 @@ const SchoolListings = () => {
 
   // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
-  const schoolsPerPage = 10; // Number of schools per page
+  const schoolsPerPage = 10;
 
   // Static filter options
   const feeRanges = ["Less than $100", "$101 - $500", "$501 - $1000", "$1001 - $3000", "Plus $3001"];
@@ -27,8 +27,6 @@ const SchoolListings = () => {
 
   useEffect(() => {
     const schoolsRef = ref(database, "schools");
-
-    // Fetch schools from Firebase
     onValue(schoolsRef, (snapshot) => {
       const data = snapshot.val();
       if (data) {
@@ -44,7 +42,6 @@ const SchoolListings = () => {
     });
   }, []);
 
-  // Filter function encapsulated
   const filterSchools = (school) => {
     return (
       (filterName === "" || school.schoolName.toLowerCase().includes(filterName.toLowerCase())) &&
@@ -55,32 +52,28 @@ const SchoolListings = () => {
     );
   };
 
-  // Memoized filtered and sorted schools
   const filteredSchools = useMemo(() => {
     return schools
       .filter(filterSchools)
       .sort((a, b) => a.schoolName.localeCompare(b.schoolName));
   }, [schools, filterName, filterLocation, filterCurriculum, filterFeeRange, filterOwnership]);
 
-  // Calculate pagination
   const indexOfLastSchool = currentPage * schoolsPerPage;
   const indexOfFirstSchool = indexOfLastSchool - schoolsPerPage;
   const currentSchools = filteredSchools.slice(indexOfFirstSchool, indexOfLastSchool);
   const totalPages = Math.ceil(filteredSchools.length / schoolsPerPage);
 
-  // Handle page change
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
 
-  // Render filter inputs as reusable components
   const renderFilterInput = (label, value, onChange, placeholder) => (
     <input
       type="text"
       placeholder={placeholder || `Filter by ${label}`}
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      className="w-full px-3 py-2 border rounded-full"
+      className="w-full px-3 py-2 border rounded-full text-sm"
     />
   );
 
@@ -88,7 +81,7 @@ const SchoolListings = () => {
     <select
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      className="w-full px-3 py-2 border rounded-full"
+      className="w-full px-3 py-2 border rounded-full text-sm"
     >
       <option value="">{`Filter by ${label}`}</option>
       {options.map((option) => (
@@ -100,13 +93,11 @@ const SchoolListings = () => {
   );
 
   return (
-    <div className="w-full p-4 pt-0 pb-0 bg-white text-sm">
-      {/* Layout with filters and school listings */}
-      <div className="flex">
-        {/* Filters Section */}
-        <div className="w-1/6 mr-10 border-0 rounded-tr-lg border-r-4">
-          <h3 className="text-md font-bold mt-20  m-4">Refine Your Search:</h3>
-          <div className="grid grid-cols-1 mr-6 gap-4">
+    <div className="w-full p-4 bg-white text-sm">
+      <div className="md:flex">
+        <div className="w-full md:w-1/6 md:mr-10">
+          <h3 className="text-md font-bold mt-8 mb-4">Refine Your Search:</h3>
+          <div className="grid grid-cols-1 gap-4">
             {renderFilterInput("School Name", filterName, setFilterName)}
             {renderDropdown("Location", filterLocation, setFilterLocation, provinces)}
             {renderDropdown("Curriculum", filterCurriculum, setFilterCurriculum, ["Cambridge", "ZIMSEC", "IB", "Others"])}
@@ -115,54 +106,47 @@ const SchoolListings = () => {
           </div>
         </div>
 
-        {/* School Listings Section */}
-        <div className="w-5/6">
+        <div className="w-full md:w-5/6">
           {loading ? (
-            <p></p>
+            <p>Loading...</p>
           ) : currentSchools.length === 0 ? (
             <p>No schools found.</p>
           ) : (
-            <div className="pb-0 mb-0">
-              <div className="p-6">
-                <h1 className="text-2xl font-thin pl-12"><strong>{filteredSchools.length}</strong> Schools found</h1>
+            <div>
+              <div className="p-4">
+                <h1 className="text-xl font-light"><strong>{filteredSchools.length}</strong> Schools found</h1>
               </div>
-              <div id="listing" className="grid grid-cols-1  mb-0 scrollbar-none">
-                <div className=" overflow-y-auto h-[56rem]">
-                {/* Display number of schools found */}
-                {currentSchools.map(({ id, schoolName, location, curriculum, feeRange, ownership, website }) => (
-                  <div key={id} className="border border-gray-200 mb-3 hover:shadow p-5 rounded-3xl">
-                    <div className="w-full flex">
-                      <div className="w-3/4">
-                        <h2 className="text-md font-semibold mb-2">{schoolName}</h2>
-                        <p>{location}</p>
-                        <p>{curriculum}</p>
-                        <p>{ownership}</p>
-                      </div>
-                      <div className="w-1/4 flex items-end justify-end">
-                        <button className="p-2 bg-slate-200 rounded-l-full">{feeRange}</button>
+              <div className="grid grid-cols-1 gap-4">
+                <div className="overflow-y-auto h-[56rem]">
+                  {currentSchools.map(({ id, schoolName, location, curriculum, feeRange, ownership, website }) => (
+                    <div key={id} className="border border-gray-200 mb-3 shadow-sm p-4 rounded-xl text-center md:text-left">
+                      <h2 className="text-md font-semibold mb-2">{schoolName}</h2>
+                      <p>{location}</p>
+                      <p>{curriculum}</p>
+                      <p>{ownership}</p>
+                      <div className="flex justify-center md:justify-end mt-4 space-x-2">
+                        <button className="px-3 py-1 bg-slate-200 rounded-full">{feeRange}</button>
                         <button
-                          className="p-2 bg-blue-400 text-white rounded-r-full"
-                          onClick={() => window.open(website, '_blank')} // Opens the website in a new tab
-                          disabled={!website} // Disables the button if no website is provided
+                          className="px-3 py-1 bg-blue-500 text-white rounded-full"
+                          onClick={() => window.open(website, '_blank')}
+                          disabled={!website}
                         >
                           Visit Site
                         </button>
                       </div>
                     </div>
-                  </div>
-                ))}
-                {/* Pagination Controls */}
-                <div className="flex justify-end mt-4 space-x-2">
-                  {Array.from({ length: totalPages }, (_, index) => (
-                    <button
-                      key={index + 1}
-                      onClick={() => handlePageChange(index + 1)}
-                      className={`px-4 py-2 rounded-full ${currentPage === index + 1 ? 'bg-blue-500 text-white' : 'bg-gray-300 text-black'}`}
-                    >
-                      {index + 1}
-                    </button>
                   ))}
-                </div>
+                  <div className="flex justify-center md:justify-end mt-4 space-x-2">
+                    {Array.from({ length: totalPages }, (_, index) => (
+                      <button
+                        key={index + 1}
+                        onClick={() => handlePageChange(index + 1)}
+                        className={`px-3 py-1 rounded-full ${currentPage === index + 1 ? 'bg-blue-500 text-white' : 'bg-gray-300 text-black'}`}
+                      >
+                        {index + 1}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
