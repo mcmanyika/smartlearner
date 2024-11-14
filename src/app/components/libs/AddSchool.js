@@ -7,10 +7,12 @@ import 'react-toastify/dist/ReactToastify.css';
 const AddSchool = () => {
   const [schoolName, setSchoolName] = useState("");
   const [location, setLocation] = useState("");
-  const [curriculum, setCurriculum] = useState("");
-  const [feeRange, setFeeRange] = useState("");
-  const [ownership, setOwnership] = useState(""); 
-  const [website, setWebsite] = useState(""); // State for the website field
+
+  // Default values for hidden fields
+  const curriculum = "ZIMSEC";
+  const feeRange = "Less than $100";
+  const ownership = "Government";
+  const website = "https://smartlearner.vercel.app/";
 
   const provinces = [
     "Harare",
@@ -24,30 +26,16 @@ const AddSchool = () => {
     "Matabeleland South",
   ];
 
-  const feeRanges = [
-    "Less than $100",
-    "$101 - $500",
-    "$501 - $1000",
-    "$1001 - $3000",
-    "Plus $3001",
-  ];
-
-  const ownershipOptions = [
-    "Government",
-    "Council",
-    "Private",
-  ];
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const newSchool = {
       schoolName,
       location,
-      curriculum,
-      feeRange,
-      ownership,
-      website, // Include the website in the new school data
+      curriculum, // Default value
+      feeRange,   // Default value
+      ownership,  // Default value
+      website,    // Default value
     };
 
     try {
@@ -55,10 +43,6 @@ const AddSchool = () => {
 
       setSchoolName("");
       setLocation("");
-      setCurriculum("");
-      setFeeRange("");
-      setOwnership("");
-      setWebsite(""); // Clear the website field
 
       toast.success("School added successfully!");
     } catch (error) {
@@ -100,72 +84,6 @@ const AddSchool = () => {
               </option>
             ))}
           </select>
-        </div>
-
-        {/* Curriculum (Dropdown) */}
-        <div className="mb-4">
-          <select
-            id="curriculum"
-            value={curriculum}
-            onChange={(e) => setCurriculum(e.target.value)}
-            required
-            className="w-full p-2 pl-6 pr-6 border rounded-full"
-          >
-            <option value="">Select curriculum</option>
-            <option value="Cambridge">Cambridge</option>
-            <option value="ZIMSEC">ZIMSEC</option>
-            <option value="IB">International Baccalaureate (IB)</option>
-            <option value="Others">Others</option>
-          </select>
-        </div>
-
-        {/* Fee Range (Dropdown) */}
-        <div className="mb-4">
-          <select
-            id="feeRange"
-            value={feeRange}
-            onChange={(e) => setFeeRange(e.target.value)}
-            required
-            className="w-full p-2 pl-6 pr-6 border rounded-full"
-          >
-            <option value="">Select fee range</option>
-            {feeRanges.map((fee) => (
-              <option key={fee} value={fee}>
-                {fee}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* Ownership (Dropdown) */}
-        <div className="mb-4">
-          <select
-            id="ownership"
-            value={ownership}
-            onChange={(e) => setOwnership(e.target.value)}
-            required
-            className="w-full p-2 pl-6 pr-6 border rounded-full"
-          >
-            <option value="">Select ownership type</option>
-            {ownershipOptions.map((type) => (
-              <option key={type} value={type}>
-                {type}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* Website */}
-        <div className="mb-4">
-          <input
-            type="url"
-            id="website"
-            value={website}
-            onChange={(e) => setWebsite(e.target.value)}
-            required
-            className="w-full p-2 pl-6 pr-6 border rounded-full"
-            placeholder="School website URL"
-          />
         </div>
 
         <button
