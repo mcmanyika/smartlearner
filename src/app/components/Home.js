@@ -16,7 +16,7 @@ const Home = () => {
 
   const ads = [
     {
-      title: "Admissions Open! Divaris Makaharis",
+      title: "Divaris Makaharis",
       link: "https://divarismakaharis.com",
       bgColor: "bg-purple-700",
     },
