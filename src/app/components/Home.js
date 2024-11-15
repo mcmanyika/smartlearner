@@ -57,14 +57,16 @@ const Home = () => {
 
   return (
     <div
-      className="bg-cover bg-center min-h-screen"
+      className="bg-cover bg-center min-h-screen flex items-center justify-center"
       style={{
         backgroundImage: "url('/images/harare.png')",
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
     >
-      <div className="bg-gradient-to-b from-gray-900 to-transparent opacity-80 min-h-screen">
+        <div className="bg-gradient-to-b from-gray-900 to-transparent opacity-80 absolute inset-0"></div>
+        <div className="relative z-10 w-full max-w-5xl text-center p-6  rounded-lg shadow-lg">
+      
         {/* Header */}
         <header className="text-center pt-20 pb-10">
           <h1 className="text-4xl font-bold text-white drop-shadow-lg">School Finder ZIM</h1>
