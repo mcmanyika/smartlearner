@@ -4,14 +4,15 @@ import { useSession } from 'next-auth/react';
 import Layout from "./components/Layout";
 // import Dashboard from '../app/components/Dash2';
 import Dashboard from '../app/components/Dashboard';
-import Alumni from '../app/components/libs/Alumni'
+import Home from '../app/components/Home'
 
-export default function Home() {
+export default function Index() {
   const { data: session } = useSession();
 
   return (
     <Layout session={session}>
-      <Dashboard />
+      <Home />
+      {/* <Dashboard /> */}
     </Layout>
   );
 }
