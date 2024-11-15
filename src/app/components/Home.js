@@ -21,7 +21,7 @@ const Home = () => {
       bgColor: "bg-purple-700",
     },
     {
-      title: "Admissions Open! Glenview 2 High School",
+      title: "Glenview 2 High School",
       link: "https://glenview2high.com",
       bgColor: "bg-blue-500",
     },
@@ -138,14 +138,14 @@ const Home = () => {
           <div
             className={`${ads[currentAd].bgColor} text-white p-4 rounded-lg text-center`}
           >
-            <h2 className="text-lg font-semibold">{ads[currentAd].title}</h2>
+            <h2 className="text-3xl font-semibold">{ads[currentAd].title}</h2>
             <a
               href={ads[currentAd].link}
               target="_blank"
               rel="noopener noreferrer"
               className="mt-2 inline-block bg-orange-600 px-4 py-2 rounded-full hover:bg-orange-700 transition"
             >
-              Register Now
+              ENROLL NOW
             </a>
           </div>
         </section>
