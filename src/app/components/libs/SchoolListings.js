@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { database } from "../../../../utils/firebaseConfig"; // Adjust the path as necessary
 import { ref, onValue, update } from "firebase/database";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const SchoolListings = () => {
   const [schools, setSchools] = useState([]);
@@ -11,6 +13,9 @@ const SchoolListings = () => {
   // State for filters
   const [filterName, setFilterName] = useState("");
   const [filterLocation, setFilterLocation] = useState("");
+  const [filterCurriculum, setFilterCurriculum] = useState("ZIMSEC");
+  const [filterFeeRange, setFilterFeeRange] = useState("Less than $100");
+  const [filterOwnership, setFilterOwnership] = useState("Government");
 
   // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
@@ -52,7 +57,10 @@ const SchoolListings = () => {
   const filterSchools = (school) => {
     return (
       (filterName === "" || school.schoolName.toLowerCase().includes(filterName.toLowerCase())) &&
-      (filterLocation === "" || school.location === filterLocation)
+      (filterLocation === "" || school.location === filterLocation) &&
+      (filterCurriculum === "" || school.curriculum === filterCurriculum) &&
+      (filterFeeRange === "" || school.feeRange === filterFeeRange) &&
+      (filterOwnership === "" || school.ownership === filterOwnership)
     );
   };
 
@@ -60,7 +68,7 @@ const SchoolListings = () => {
     return schools
       .filter(filterSchools)
       .sort((a, b) => a.schoolName.localeCompare(b.schoolName));
-  }, [schools, filterName, filterLocation]);
+  }, [schools, filterName, filterLocation, filterCurriculum, filterFeeRange, filterOwnership]);
 
   const indexOfLastSchool = currentPage * schoolsPerPage;
   const indexOfFirstSchool = indexOfLastSchool - schoolsPerPage;
@@ -86,12 +94,12 @@ const SchoolListings = () => {
       const schoolRef = ref(database, `schools/${selectedSchool.id}`);
       update(schoolRef, selectedSchool)
         .then(() => {
-          alert("School updated successfully!");
+          toast.success("School updated successfully!");
           setIsModalOpen(false);
         })
         .catch((error) => {
           console.error("Error updating school:", error);
-          alert("Failed to update school.");
+          toast.error("Failed to update school.");
         });
     }
   };
@@ -148,6 +156,7 @@ const SchoolListings = () => {
 
   return (
     <div className="w-full p-4 bg-white text-sm">
+      <ToastContainer />
       <div className="md:flex">
         <div className="w-full md:w-1/6 md:mr-10">
           <h3 className="text-md font-bold mt-8 mb-4">Refine Your Search:</h3>
@@ -214,6 +223,7 @@ const SchoolListings = () => {
               }
               className="w-full px-3 py-2 border rounded mb-4"
               placeholder="School Name"
+              readOnly
             />
             <select
               value={selectedSchool.curriculum}
@@ -241,18 +251,19 @@ const SchoolListings = () => {
                 </option>
               ))}
             </select>
-            <select
+            <select readOnly
               value={selectedSchool.ownership}
               onChange={(e) =>
                 setSelectedSchool((prev) => ({ ...prev, ownership: e.target.value }))
               }
               className="w-full px-3 py-2 border rounded mb-4"
             >
-              {ownershipOptions.map((ownership) => (
-                <option key={ownership} value={ownership}>
-                  {ownership}
+              {ownershipOptions.map((option) => (
+                <option key={option} value={option}>
+                  {option}
                 </option>
               ))}
+              
             </select>
             <input
               type="text"
@@ -262,6 +273,7 @@ const SchoolListings = () => {
               }
               className="w-full px-3 py-2 border rounded mb-4"
               placeholder="Website URL"
+              readOnly
             />
             <div className="flex justify-end space-x-2">
               <button
