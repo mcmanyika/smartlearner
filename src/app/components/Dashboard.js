@@ -98,9 +98,9 @@ const Dashboard = () => {
               </div>
               <div className='w-36 pt-1'>
               <button onClick={() => handleButtonClick('getintouch')}>Get in touch</button></div>
-              <div className='w-36 pt-1'>
+              {/* <div className='w-36 pt-1'>
                 <button onClick={() => handleButtonClick('claim')}>Add School</button>
-              </div>
+              </div> */}
               </div>
               </div>
             </div>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { database } from "../../../../utils/firebaseConfig"; // Adjust the path as necessary
 import { ref, onValue, update } from "firebase/database";
-import { ToastContainer, toast } from "react-toastify";
+import {  toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const SchoolListings = () => {
@@ -156,7 +156,6 @@ const SchoolListings = () => {
 
   return (
     <div className="w-full p-4 bg-white text-sm">
-      <ToastContainer />
       <div className="md:flex">
         <div className="w-full md:w-1/6 md:mr-10">
           <h3 className="text-md font-bold mt-8 mb-4">Refine Your Search:</h3>
@@ -284,6 +283,7 @@ const SchoolListings = () => {
               </button>
               <button
                 onClick={handleSchoolUpdate}
+                
                 className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
               >
                 Update
