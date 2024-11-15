@@ -138,6 +138,7 @@ const Home = () => {
           <div
             className={`${ads[currentAd].bgColor} text-white p-4 rounded-lg text-center`}
           >
+            <div className="text-xs text-left text-gray-300">Sponsered AD</div>
             <h2 className="text-3xl font-semibold">{ads[currentAd].title}</h2>
             <a
               href={ads[currentAd].link}
