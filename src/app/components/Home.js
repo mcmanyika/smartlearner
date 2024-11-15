@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaSearch } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 
@@ -11,6 +11,29 @@ const Home = () => {
   const [filterOwnership, setFilterOwnership] = useState("");
 
   const router = useRouter();
+
+  const [currentAd, setCurrentAd] = useState(0);
+
+  const ads = [
+    {
+      title: "Admissions Open! Divaris Makaharis - Form 1",
+      link: "https://divarismakaharis.com",
+      bgColor: "bg-purple-700",
+    },
+    {
+      title: "Admissions Open! Glenview 2 High School - Form 1",
+      link: "https://glenview2high.com",
+      bgColor: "bg-blue-500",
+    },
+  ];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentAd((prevAd) => (prevAd + 1) % ads.length);
+    }, 5000); // Change ad every 5 seconds
+
+    return () => clearInterval(interval); // Cleanup on component unmount
+  }, [ads.length]);
 
   const handleSearch = () => {
     const queryParams = new URLSearchParams({
@@ -109,16 +132,26 @@ const Home = () => {
             </button>
           </div>
         </section>
+
         {/* Advertisement Banner */}
         <section className="max-w-5xl mx-auto mb-8">
-          <div className="bg-purple-700 text-white p-4 rounded-lg text-center">
-            <h2 className="text-lg font-semibold">Admissions Open! Nursery - Year 12</h2>
-            <button className="mt-2 bg-orange-600 px-4 py-2 rounded-full">Register Now</button>
+          <div
+            className={`${ads[currentAd].bgColor} text-white p-4 rounded-lg text-center`}
+          >
+            <h2 className="text-lg font-semibold">{ads[currentAd].title}</h2>
+            <a
+              href={ads[currentAd].link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-2 inline-block bg-orange-600 px-4 py-2 rounded-full hover:bg-orange-700 transition"
+            >
+              Register Now
+            </a>
           </div>
         </section>
 
         {/* Location Cards */}
-        <section className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-7 gap-6 text-center">
+        <section className="max-w-5xl mx-auto p-4 grid grid-cols-2 md:grid-cols-7 gap-6 text-center">
           {["Harare", "Bulawayo", "Mutare", "Gweru", "Masvingo", "Chinhoyi", "Marondera"].map((location) => (
             <div
               key={location}
