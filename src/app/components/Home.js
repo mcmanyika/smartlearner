@@ -154,8 +154,8 @@ const Home = () => {
         </section>
 
         {/* Location Cards */}
-        <section className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-7 gap-6 text-center">
-          {["Harare", "Bulawayo", "Mutare", "Gweru", "Masvingo", "Chinhoyi", "Marondera"].map((location) => (
+        <section className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+          {["Harare", "Bulawayo", "Mutare", "Gweru", "Masvingo", "Chinhoyi", "Marondera", "Bindura"].map((location) => (
             <div
               key={location}
               onClick={() => handleLocationClick(location)}
