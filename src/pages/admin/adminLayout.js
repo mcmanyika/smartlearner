@@ -49,12 +49,15 @@ const AdminLayout = ({ children }) => {
               .map((key) => ({
                 id: key,
                 title: data[key].title,
-                link: data[key].link || '#', // Default to '#' if link is missing
+                link: data[key].link || '#',
                 status: data[key].status,
                 category: data[key].category,
-                icon: data[key].icon || 'FaTachometerAlt', // Default icon
+                icon: data[key].icon || 'FaTachometerAlt',
               }))
-              .filter((title) => title.status === 'Active'); // Filter only active titles
+              .filter((title) => 
+                title.status === 'Active' && 
+                title.title !== 'Add School'
+              );
             setTitles(titlesArray);
           } else {
             console.warn('No titles found in Firebase.');

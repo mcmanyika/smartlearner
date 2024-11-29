@@ -69,7 +69,7 @@ const Home = () => {
       
         {/* Header */}
         <header className="text-center pt-20 pb-10">
-          <h1 className="text-4xl font-bold text-white drop-shadow-lg">School Finder ZIM</h1>
+          <h1 className="text-4xl font-bold text-white drop-shadow-lg">School Finder</h1>
           <p className="text-lg text-white mt-2 drop-shadow-lg">Find The Right School For Your Child</p>
         </header>
 

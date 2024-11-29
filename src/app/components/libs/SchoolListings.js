@@ -1,18 +1,23 @@
 "use client";
 import React, { useState, useEffect, useMemo } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { database } from "../../../../utils/firebaseConfig";
 import { ref, onValue } from "firebase/database";
 
 const SchoolListings = () => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [schools, setSchools] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  // Initialize filters from URL params
   const [filters, setFilters] = useState({
-    name: '',
-    location: '',
-    curriculum: '',
-    feeRange: '',
-    ownership: ''
+    schoolName: searchParams.get('schoolName') || '',
+    location: searchParams.get('location') || '',
+    curriculum: searchParams.get('curriculum') || '',
+    feeRange: searchParams.get('feeRange') || '',
+    ownership: searchParams.get('ownership') || ''
   });
 
   // Reset to first page when filters change
@@ -20,51 +25,73 @@ const SchoolListings = () => {
     setCurrentPage(1);
   }, [filters]);
 
-  // Filter change handler
+  // Filter function
+  const filteredSchools = useMemo(() => {
+    return schools.filter(school => {
+      const nameMatch = !filters.schoolName || 
+        school.schoolName?.toLowerCase().includes(filters.schoolName.toLowerCase());
+      
+      const locationMatch = !filters.location || 
+        school.location?.toLowerCase() === filters.location.toLowerCase();
+      
+      const curriculumMatch = !filters.curriculum || 
+        school.curriculum?.toLowerCase() === filters.curriculum.toLowerCase();
+      
+      const feeRangeMatch = !filters.feeRange || 
+        school.feeRange === filters.feeRange;
+      
+      const ownershipMatch = !filters.ownership || 
+        school.ownership?.toLowerCase() === filters.ownership.toLowerCase();
+
+      return nameMatch && locationMatch && curriculumMatch && 
+             feeRangeMatch && ownershipMatch;
+    });
+  }, [schools, filters]);
+
+  // Get unique values for filter options
+  const uniqueLocations = [...new Set(schools.map(school => school.location))].sort();
+  const uniqueCurriculums = [...new Set(schools.map(school => school.curriculum))].sort();
+  const uniqueFeeRanges = [...new Set(schools.map(school => school.feeRange))].sort();
+  const uniqueOwnerships = [...new Set(schools.map(school => school.ownership))].sort();
+
+  // Pagination calculations
+  const schoolsPerPage = 9;
+  const indexOfLastSchool = currentPage * schoolsPerPage;
+  const indexOfFirstSchool = indexOfLastSchool - schoolsPerPage;
+  const currentSchools = filteredSchools.slice(indexOfFirstSchool, indexOfLastSchool);
+  const totalPages = Math.ceil(filteredSchools.length / schoolsPerPage);
+
+  // Handle filter changes
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
     setFilters(prev => ({
       ...prev,
       [name]: value
     }));
+
+    // Update URL
+    const newParams = new URLSearchParams(searchParams.toString());
+    if (value) {
+      newParams.set(name, value);
+    } else {
+      newParams.delete(name);
+    }
+    router.replace(`/libs/schools?${newParams.toString()}`, { scroll: false });
   };
 
-  // Filter function
-  const filterSchools = useMemo(() => {
-    return schools.filter(school => {
-      const nameMatch = school.schoolName.toLowerCase().includes(filters.name.toLowerCase());
-      const locationMatch = !filters.location || school.location === filters.location;
-      const curriculumMatch = !filters.curriculum || school.curriculum === filters.curriculum;
-      const feeRangeMatch = !filters.feeRange || school.feeRange === filters.feeRange;
-      const ownershipMatch = !filters.ownership || school.ownership === filters.ownership;
-
-      return nameMatch && locationMatch && curriculumMatch && feeRangeMatch && ownershipMatch;
+  // Reset filters
+  const resetFilters = () => {
+    setFilters({
+      schoolName: '',
+      location: '',
+      curriculum: '',
+      feeRange: '',
+      ownership: ''
     });
-  }, [schools, filters]);
-
-  // Get unique values for select options
-  const uniqueLocations = [...new Set(schools.map(school => school.location))].sort();
-  const uniqueCurriculums = [...new Set(schools.map(school => school.curriculum))].sort();
-  const uniqueFeeRanges = [...new Set(schools.map(school => school.feeRange))].sort();
-  const uniqueOwnerships = [...new Set(schools.map(school => school.ownership))].sort();
-
-  // Add these new state variables
-  const [currentPage, setCurrentPage] = useState(1);
-  const schoolsPerPage = 9; // 3x3 grid
-
-  // Calculate pagination values
-  const indexOfLastSchool = currentPage * schoolsPerPage;
-  const indexOfFirstSchool = indexOfLastSchool - schoolsPerPage;
-  const currentSchools = filterSchools.slice(indexOfFirstSchool, indexOfLastSchool);
-  const totalPages = Math.ceil(filterSchools.length / schoolsPerPage);
-
-  // Pagination controls
-  const paginate = (pageNumber) => {
-    setCurrentPage(pageNumber);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    router.replace('/libs/schools');
   };
 
-  // Add Firebase data fetching
+  // Fetch schools data
   useEffect(() => {
     const schoolsRef = ref(database, 'schools');
     
@@ -72,7 +99,6 @@ const SchoolListings = () => {
     onValue(schoolsRef, (snapshot) => {
       const data = snapshot.val();
       if (data) {
-        // Convert Firebase object to array with IDs
         const schoolsArray = Object.entries(data).map(([id, school]) => ({
           id,
           ...school
@@ -88,132 +114,97 @@ const SchoolListings = () => {
     });
   }, []);
 
+  // Pagination handler
+  const paginate = (pageNumber) => {
+    setCurrentPage(pageNumber);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <div className="w-full p-6 bg-gray-50">
       {/* Filter Section */}
       <div className="mb-8 bg-white p-6 rounded-xl shadow-sm">
-        <h2 className="text-xl font-semibold mb-4 text-gray-800">Filter Schools</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-          {/* Name Filter */}
-          <div className="space-y-2">
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-              School Name
-            </label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              value={filters.name}
-              onChange={handleFilterChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Search by name..."
-            />
-          </div>
-
-          {/* Location Filter */}
-          <div className="space-y-2">
-            <label htmlFor="location" className="block text-sm font-medium text-gray-700">
-              Location
-            </label>
-            <select
-              id="location"
-              name="location"
-              value={filters.location}
-              onChange={handleFilterChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            >
-              <option value="">All Locations</option>
-              {uniqueLocations.map(location => (
-                <option key={location} value={location}>{location}</option>
-              ))}
-            </select>
-          </div>
-
-          {/* Curriculum Filter */}
-          <div className="space-y-2">
-            <label htmlFor="curriculum" className="block text-sm font-medium text-gray-700">
-              Curriculum
-            </label>
-            <select
-              id="curriculum"
-              name="curriculum"
-              value={filters.curriculum}
-              onChange={handleFilterChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            >
-              <option value="">All Curriculums</option>
-              {uniqueCurriculums.map(curriculum => (
-                <option key={curriculum} value={curriculum}>{curriculum}</option>
-              ))}
-            </select>
-          </div>
-
-          {/* Fee Range Filter */}
-          <div className="space-y-2">
-            <label htmlFor="feeRange" className="block text-sm font-medium text-gray-700">
-              Fee Range
-            </label>
-            <select
-              id="feeRange"
-              name="feeRange"
-              value={filters.feeRange}
-              onChange={handleFilterChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            >
-              <option value="">All Fee Ranges</option>
-              {uniqueFeeRanges.map(range => (
-                <option key={range} value={range}>{range}</option>
-              ))}
-            </select>
-          </div>
-
-          {/* Ownership Filter */}
-          <div className="space-y-2">
-            <label htmlFor="ownership" className="block text-sm font-medium text-gray-700">
-              Ownership
-            </label>
-            <select
-              id="ownership"
-              name="ownership"
-              value={filters.ownership}
-              onChange={handleFilterChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            >
-              <option value="">All Types</option>
-              {uniqueOwnerships.map(ownership => (
-                <option key={ownership} value={ownership}>{ownership}</option>
-              ))}
-            </select>
-          </div>
-        </div>
-
-        {/* Reset Filters Button */}
-        <div className="mt-4 flex justify-end">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-semibold text-gray-800">Filter Schools</h2>
           <button
-            onClick={() => setFilters({
-              name: '',
-              location: '',
-              curriculum: '',
-              feeRange: '',
-              ownership: ''
-            })}
-            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            onClick={resetFilters}
+            className="text-sm text-gray-600 hover:text-blue-600"
           >
             Reset Filters
           </button>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+          <input
+            type="text"
+            name="schoolName"
+            value={filters.schoolName}
+            onChange={handleFilterChange}
+            placeholder="School Name"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+          />
+          
+          <select
+            name="location"
+            value={filters.location}
+            onChange={handleFilterChange}
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+          >
+            <option value="">All Locations</option>
+            {uniqueLocations.map(location => (
+              <option key={location} value={location}>{location}</option>
+            ))}
+          </select>
+
+          <select
+            name="curriculum"
+            value={filters.curriculum}
+            onChange={handleFilterChange}
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+          >
+            <option value="">All Curriculums</option>
+            {uniqueCurriculums.map(curriculum => (
+              <option key={curriculum} value={curriculum}>{curriculum}</option>
+            ))}
+          </select>
+
+          <select
+            name="feeRange"
+            value={filters.feeRange}
+            onChange={handleFilterChange}
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+          >
+            <option value="">All Fee Ranges</option>
+            {uniqueFeeRanges.map(range => (
+              <option key={range} value={range}>{range}</option>
+            ))}
+          </select>
+
+          <select
+            name="ownership"
+            value={filters.ownership}
+            onChange={handleFilterChange}
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+          >
+            <option value="">All Ownerships</option>
+            {uniqueOwnerships.map(ownership => (
+              <option key={ownership} value={ownership}>{ownership}</option>
+            ))}
+          </select>
         </div>
       </div>
 
       {/* Results Count */}
       <div className="mb-4 text-gray-600">
-        Found {filterSchools.length} schools matching your criteria
+        Found {filteredSchools.length} schools matching your criteria
       </div>
 
+      {/* School Cards */}
       {loading ? (
         <div className="flex justify-center items-center min-h-[200px]">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
         </div>
-      ) : filterSchools.length === 0 ? (
+      ) : filteredSchools.length === 0 ? (
         <div className="text-center py-12">
           <p className="text-gray-600 text-lg">No schools match your search criteria.</p>
         </div>
@@ -275,7 +266,6 @@ const SchoolListings = () => {
 
             {[...Array(totalPages)].map((_, index) => {
               const pageNumber = index + 1;
-              // Show only nearby pages
               if (
                 pageNumber === 1 ||
                 pageNumber === totalPages ||
@@ -293,15 +283,6 @@ const SchoolListings = () => {
                   >
                     {pageNumber}
                   </button>
-                );
-              } else if (
-                pageNumber === currentPage - 2 ||
-                pageNumber === currentPage + 2
-              ) {
-                return (
-                  <span key={pageNumber} className="px-2">
-                    ...
-                  </span>
                 );
               }
               return null;
@@ -322,8 +303,8 @@ const SchoolListings = () => {
 
           {/* Page Info */}
           <div className="mt-4 text-center text-gray-600">
-            Showing {indexOfFirstSchool + 1} to {Math.min(indexOfLastSchool, filterSchools.length)} of{' '}
-            {filterSchools.length} schools
+            Showing {indexOfFirstSchool + 1} to {Math.min(indexOfLastSchool, filteredSchools.length)} of{' '}
+            {filteredSchools.length} schools
           </div>
         </>
       )}
