@@ -53,7 +53,7 @@ const AddSchool = () => {
 
   return (
     <div className="max-w-md mx-auto bg-white rounded-lg text-gray-500 font-thin">
-      <h1 className="text-xl font-bold mb-4">Add a New School</h1>
+      <h1 className="text-xl font-bold mt-20 mb-4">Add a New School</h1>
       <form onSubmit={handleSubmit}>
         {/* School Name */}
         <div className="mb-4">
