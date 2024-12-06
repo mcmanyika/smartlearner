@@ -93,7 +93,7 @@ const AdminLayout = ({ children }) => {
         } bg-blue-400 text-white p-4 min-h-screen`}
       >
         <div className="flex justify-between items-center mb-6">
-          {isExpanded && <h2 className="text-lg font-thin">Smart Learner</h2>}
+          {isExpanded && <h2 className="text-lg font-thin">School Finder</h2>}
           <FaBars className="cursor-pointer text-2xl" onClick={toggleSidebar} />
         </div>
         <nav>
