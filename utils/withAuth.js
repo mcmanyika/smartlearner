@@ -10,7 +10,7 @@ const withAuth = (WrappedComponent) => {
 
     useEffect(() => {
       if (status === 'loading') return; // Do nothing while loading
-      if (!session) router.push('/'); // Redirect to signin if not authenticated
+      if (!session) router.push('/admin/login'); // Redirect to signin if not authenticated
     }, [router, session, status]);
 
     if (status === 'loading' || !session) {
