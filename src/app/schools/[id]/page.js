@@ -135,12 +135,12 @@ const SchoolDetailPage = () => {
             <FaArrowLeft className="mr-2" /> Back to Schools
           </button>
           
-          <button
+          {/* <button
             onClick={() => setIsEditModalOpen(true)}
             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
           >
             Edit School
-          </button>
+          </button> */}
         </div>
 
         {/* School Details */}
