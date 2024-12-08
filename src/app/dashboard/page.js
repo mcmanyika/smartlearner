@@ -4,7 +4,7 @@ export default function DashboardPage() {
   return (
     <ProtectedRoute>
       <div>
-        {/* Your protected content */}
+        {/* Your protected content .. */}
       </div>
     </ProtectedRoute>
   );
