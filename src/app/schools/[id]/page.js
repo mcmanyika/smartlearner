@@ -257,12 +257,12 @@ const SchoolDetailPage = () => {
               </div>
 
               <div className="flex justify-between items-center mb-6">
-                  <button
+                  {/* <button
                       onClick={() => setIsEditModalOpen(true)}
                       className="px-4 py-2 bg-slate-600 text-white rounded-full hover:bg-blue-700"
                   >
                       Edit School
-                  </button>
+                  </button> */}
               </div>
             </div>
 
