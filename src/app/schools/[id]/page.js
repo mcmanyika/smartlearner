@@ -3,11 +3,12 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { database } from '../../../../utils/firebaseConfig';
-import { ref, onValue, update, push, serverTimestamp, get } from 'firebase/database';
+import { ref, onValue, update, push, serverTimestamp, get, remove, ref as dbRef } from 'firebase/database';
 import { FaArrowLeft, FaStar } from 'react-icons/fa';
 import Layout from '../../../pages/admin/adminLayout';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useAuth } from '../../../../contexts/AuthContext';
 
 const SchoolDetailPage = () => {
   const params = useParams();
@@ -24,6 +25,8 @@ const SchoolDetailPage = () => {
   const MAX_VISIBLE_PAGES = 5;
   const [isClaimModalOpen, setIsClaimModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { user } = useAuth();
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     const schoolRef = ref(database, `schools/${params.id}`);
@@ -37,6 +40,17 @@ const SchoolDetailPage = () => {
 
     return () => unsubscribe();
   }, [params.id]);
+
+  useEffect(() => {
+    if (user) {
+      const adminRef = ref(database, `admins/${user.uid}`);
+      onValue(adminRef, (snapshot) => {
+        setIsAdmin(snapshot.exists());
+      });
+    } else {
+      setIsAdmin(false);
+    }
+  }, [user]);
 
   const handleRating = async (rating) => {
     const schoolRef = ref(database, `schools/${params.id}`);
@@ -125,6 +139,19 @@ const SchoolDetailPage = () => {
       toast.error('Error submitting claim. Please try again.');
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleDeleteComment = async (commentId) => {
+    if (window.confirm('Are you sure you want to delete this comment?')) {
+      try {
+        const commentRef = dbRef(database, `schools/${params.id}/comments/${commentId}`);
+        await remove(commentRef);
+        toast.success('Comment deleted successfully');
+      } catch (error) {
+        console.error('Error deleting comment:', error);
+        toast.error('Failed to delete comment');
+      }
     }
   };
 
@@ -223,20 +250,20 @@ const SchoolDetailPage = () => {
               <div>
                   <button 
                     onClick={() => setIsClaimModalOpen(true)}
-                    className='bg-slate-500 text-white rounded-full px-4 py-1 hover:bg-slate-600 transition-colors'
+                    className='bg-yellow-500 text-white rounded-full px-4 py-1 hover:bg-slate-600 transition-colors'
                   >
                     Claim School
                   </button>
               </div>
 
-              {/* <div className="flex justify-between items-center mb-6">
+              <div className="flex justify-between items-center mb-6">
                   <button
                       onClick={() => setIsEditModalOpen(true)}
-                      className="px-4 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700"
+                      className="px-4 py-2 bg-slate-600 text-white rounded-full hover:bg-blue-700"
                   >
                       Edit School
                   </button>
-              </div> */}
+              </div>
             </div>
 
             {school.description && (
@@ -389,7 +416,15 @@ const SchoolDetailPage = () => {
                   <>
                     {paginatedComments().map(([commentId, comment]) => (
                       <div key={commentId} className="bg-gray-50 p-4 rounded-lg">
-                        <p className="text-gray-700">{comment.text}</p>
+                        <div className="flex justify-between items-start">
+                          <p className="text-gray-700">{comment.text}</p>
+                          {/* <button
+                            onClick={() => handleDeleteComment(commentId)}
+                            className="text-red-500 hover:text-red-700 text-sm ml-4"
+                          >
+                            Delete
+                          </button> */}
+                        </div>
                         <div className="text-sm text-gray-500 mt-2">
                           {comment.timestamp 
                             ? new Date(comment.timestamp).toLocaleDateString('en-US', {
