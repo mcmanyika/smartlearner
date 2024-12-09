@@ -1,147 +1,82 @@
-import { useEffect, useState } from 'react';
-import { useSession } from 'next-auth/react';
+import { useAuth } from '../../../contexts/AuthContext';
+import { signOut } from 'firebase/auth';
+import { auth } from '../../../utils/firebaseConfig';
 import Link from 'next/link';
-import { FaBars, FaSpinner } from 'react-icons/fa';
 import '../../app/globals.css';
-import { database } from '../../../utils/firebaseConfig';
-import { ref, onValue } from 'firebase/database';
-import {
-  FaTachometerAlt,
-  FaPencilRuler,
-  FaCalendarAlt,
-  FaClipboardList,
-  FaUserGraduate,
-} from 'react-icons/fa';
-import { MdOutlineLibraryBooks } from 'react-icons/md';
-import { LiaChalkboardTeacherSolid } from 'react-icons/lia';
-import { IoPeopleOutline } from 'react-icons/io5';
-import { RiAdminFill } from 'react-icons/ri';
-
-const iconMapping = {
-  FaTachometerAlt: FaTachometerAlt,
-  FaPencilRuler: FaPencilRuler,
-  FaCalendarAlt: FaCalendarAlt,
-  FaClipboardList: FaClipboardList,
-  FaUserGraduate: FaUserGraduate,
-  MdOutlineLibraryBooks: MdOutlineLibraryBooks,
-  LiaChalkboardTeacherSolid: LiaChalkboardTeacherSolid,
-  IoPeopleOutline: IoPeopleOutline,
-  RiAdminFill: RiAdminFill,
-};
 
 const AdminLayout = ({ children }) => {
-  const { data: session } = useSession();
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [titles, setTitles] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const { user } = useAuth();
 
-  // Fetch titles from the database
-  useEffect(() => {
-    const fetchTitles = async () => {
-      try {
-        const titleRef = ref(database, 'title');
-
-        onValue(titleRef, (snapshot) => {
-          const data = snapshot.val();
-          if (data) {
-            const titlesArray = Object.keys(data)
-              .map((key) => ({
-                id: key,
-                title: data[key].title,
-                link: data[key].link || '#',
-                status: data[key].status,
-                category: data[key].category,
-                icon: data[key].icon || 'FaTachometerAlt',
-              }))
-              .filter((title) => 
-                title.status === 'Active' && 
-                title.title !== 'Add School'
-              );
-            setTitles(titlesArray);
-          } else {
-            console.warn('No titles found in Firebase.');
-            setTitles([]);
-          }
-          setIsLoading(false);
-        });
-      } catch (error) {
-        console.error('Error fetching titles from Firebase:', error);
-        setIsLoading(false);
-      }
-    };
-
-    fetchTitles();
-  }, []);
-
-  const toggleSidebar = () => {
-    setIsExpanded(!isExpanded);
-  };
-
-  const toggleMobileSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
+  const handleSignOut = async () => {
+    try {
+      await signOut(auth);
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
   };
 
   return (
-    <div className="flex min-h-screen text-base bg-white relative">
-      {/* Sidebar */}
-      <aside
-        className={`fixed z-40 transform ${
-          isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
-        } transition-transform duration-300 md:relative md:translate-x-0 ${
-          isExpanded ? 'w-72' : 'w-16'
-        } bg-blue-400 text-white p-4 min-h-screen`}
-      >
-        <div className="flex justify-between items-center mb-6">
-          {isExpanded && <h2 className="text-lg font-thin">School Finder</h2>}
-          <FaBars className="cursor-pointer text-2xl" onClick={toggleSidebar} />
-        </div>
-        <nav>
-          {isLoading ? (
-            <div className="flex items-center justify-center h-32">
-              <FaSpinner className="animate-spin text-blue-500 text-3xl" />
+    <div className="min-h-screen bg-gray-50">
+      {/* Sticky Header */}
+      <header className="sticky top-0 z-50 bg-white shadow-md">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            {/* Logo/Brand */}
+            <div className="flex items-center">
+              <Link href="/" className="text-xl font-semibold text-blue-600">
+                School Finder
+              </Link>
             </div>
-          ) : (
-            <ul>
-              {titles.length > 0 &&
-                titles.map((rw) => {
-                  const IconComponent = iconMapping[rw.icon];
-                  return (
-                    <li key={rw.id} className="mb-4 flex items-center">
-                      <Link href={rw.link} className="flex items-center">
-                        <IconComponent className="mr-2 text-2xl" />
-                        {isExpanded && (
-                          <div className="block p-2 rounded cursor-pointer">
-                            {rw.title}
-                          </div>
-                        )}
-                      </Link>
-                    </li>
-                  );
-                })}
-            </ul>
-          )}
-        </nav>
-      </aside>
 
-      {/* Overlay for Mobile Sidebar */}
-      {isSidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black opacity-50 z-30 md:hidden"
-          onClick={toggleMobileSidebar}
-        ></div>
-      )}
+            {/* Navigation Links */}
+            <nav className="hidden md:flex items-center space-x-8">
+              <Link href="/" className="text-gray-600 hover:text-blue-600">
+                About
+              </Link>
+              <Link href="/" className="text-gray-600 hover:text-blue-600">
+                Claim Site
+              </Link>
+              <Link href="/" className="text-gray-600 hover:text-blue-600">
+                Contact
+              </Link>
+            </nav>
 
-      {/* Main Content Area */}
-      <div className="flex-1 flex flex-col transition-all duration-300 ease-in-out">
-        <header className="flex items-center justify-between bg-blue-400 text-white p-4 md:hidden">
-          <div className="flex items-center">
-            <FaBars className="cursor-pointer text-2xl mr-4" onClick={toggleMobileSidebar} />
-            <h1 className="text-lg">Smart Learner</h1>
+            {/* User Profile/Auth */}
+            <div className="flex items-center space-x-4">
+              {user ? (
+                <div className="flex items-center space-x-4">
+                  <div className="hidden md:flex items-center space-x-2">
+                    <img 
+                      src={user.photoURL} 
+                      alt={user.displayName} 
+                      className="w-8 h-8 rounded-full"
+                    />
+                    <span className="text-gray-700">{user.displayName}</span>
+                  </div>
+                  <button
+                    onClick={handleSignOut}
+                    className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700"
+                  >
+                    Sign Out
+                  </button>
+                </div>
+              ) : (
+                <Link 
+                  href="/admin/login"
+                  className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700"
+                >
+                  Sign In
+                </Link>
+              )}
+            </div>
           </div>
-        </header>
-        <main className="flex-1">{children}</main>
-      </div>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {children}
+      </main>
     </div>
   );
 };

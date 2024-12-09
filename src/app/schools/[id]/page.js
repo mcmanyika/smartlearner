@@ -5,6 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { database } from '../../../../utils/firebaseConfig';
 import { ref, onValue, update, push, serverTimestamp } from 'firebase/database';
 import { FaArrowLeft, FaStar } from 'react-icons/fa';
+import Layout from '../../../pages/admin/adminLayout';
 
 const SchoolDetailPage = () => {
   const params = useParams();
@@ -125,24 +126,11 @@ const SchoolDetailPage = () => {
   const totalPages = Math.ceil(totalComments / COMMENTS_PER_PAGE);
 
   return (
+    <Layout>
+        
     <div className="min-h-screen bg-gray-50">
-      <div className="max-w-4xl mx-auto">
-        <div className="flex justify-between items-center mb-6 p-6">
-          <button
-            onClick={() => router.back()}
-            className="flex items-center text-blue-600 hover:text-blue-800"
-          >
-            <FaArrowLeft className="mr-2" /> Back to Schools
-          </button>
-          
-          {/* <button
-            onClick={() => setIsEditModalOpen(true)}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-          >
-            Edit School
-          </button> */}
-        </div>
-
+      <div className="max-w-5xl mx-auto">
+       
         {/* School Details */}
         <div className="bg-white shadow rounded-lg p-6">
           <h1 className="text-3xl font-bold mb-2">{school.schoolName}</h1>
@@ -186,6 +174,14 @@ const SchoolDetailPage = () => {
                 ) : 'Not specified'}
               </p>
             </div>
+            {/* <div className="flex justify-between items-center mb-6">
+                <button
+                    onClick={() => setIsEditModalOpen(true)}
+                    className="px-4 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700"
+                >
+                    Edit School
+                </button>
+            </div> */}
           </div>
 
           {school.description && (
@@ -617,6 +613,8 @@ const SchoolDetailPage = () => {
         )}
       </div>
     </div>
+
+    </Layout>
   );
 };
 
