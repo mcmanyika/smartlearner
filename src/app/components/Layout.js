@@ -1,6 +1,5 @@
 // components/Layout.js
 
-import AIAssistantForm from '../components/ai/AIAssistantForm';
 
 const Layout = ({ children }) => {
   return (
@@ -8,7 +7,6 @@ const Layout = ({ children }) => {
       <main>
         {children}
       </main>
-      <AIAssistantForm />
     </div>
   );
 };
