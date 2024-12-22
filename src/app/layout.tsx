@@ -3,6 +3,7 @@ import { getServerSession, Session } from "next-auth"; // Import Session type
 import { Inter } from "next/font/google";
 import "./globals.css";
 import SessionProvider from "./SessionProvider";
+import Script from 'next/script';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,9 +20,10 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <head>
-        <script 
+        <Script 
           async 
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1376209402491765"
+          strategy="afterInteractive"
           crossOrigin="anonymous"
         />
       </head>
