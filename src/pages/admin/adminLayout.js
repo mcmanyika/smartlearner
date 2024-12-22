@@ -34,9 +34,6 @@ const AdminLayout = ({ children }) => {
                 About
               </Link>
               <Link href="/" className="text-gray-600 hover:text-blue-600">
-                Claim Site
-              </Link>
-              <Link href="/" className="text-gray-600 hover:text-blue-600">
                 Contact
               </Link>
             </nav>

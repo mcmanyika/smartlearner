@@ -166,6 +166,10 @@ const Home = () => {
             </div>
           ))}
         </section>
+        <section className="max-w-5xl mx-auto mb-8">
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1376209402491765"
+     crossorigin="anonymous"></script>
+        </section>
       </div>
     </div>
   );
