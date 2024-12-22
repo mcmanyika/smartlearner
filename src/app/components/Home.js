@@ -35,24 +35,24 @@ const Home = () => {
     return () => clearInterval(interval); // Cleanup on component unmount
   }, [ads.length]);
 
-  const handleSearch = () => {
-    const queryParams = new URLSearchParams({
-      name: filterName,
-      location: filterLocation,
-      curriculum: filterCurriculum,
-      feeRange: filterFeeRange,
-      ownership: filterOwnership,
-    }).toString();
-
-    router.push(`/libs/schools?${queryParams}`);
+  const handleSearch = async () => {
+    router.push({
+      pathname: '/libs/schools',
+      query: {
+        name: filterName,
+        location: filterLocation,
+        curriculum: filterCurriculum,
+        feeRange: filterFeeRange,
+        ownership: filterOwnership,
+      }
+    });
   };
 
-  const handleLocationClick = (location) => {
-    const queryParams = new URLSearchParams({
-      location,
-    }).toString();
-
-    router.push(`/libs/schools?${queryParams}`);
+  const handleLocationClick = async (location) => {
+    router.push({
+      pathname: '/libs/schools',
+      query: { location }
+    });
   };
 
   return (

@@ -18,6 +18,13 @@ export default async function RootLayout({
   const session = (await getServerSession(authOptions)) as Session | null; // Assert the type
   return (
     <html lang="en">
+      <head>
+        <script 
+          async 
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1376209402491765"
+          crossOrigin="anonymous"
+        />
+      </head>
       <body className={inter.className}>
         <SessionProvider session={session}>
           {children}
