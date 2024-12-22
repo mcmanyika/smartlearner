@@ -169,6 +169,16 @@ const Home = () => {
         <section className="max-w-5xl mx-auto mb-8">
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1376209402491765"
      crossorigin="anonymous"></script>
+
+          <ins class="adsbygoogle"
+              style="display:block"
+              data-ad-client="ca-pub-1376209402491765"
+              data-ad-slot="3885223979"
+              data-ad-format="auto"
+              data-full-width-responsive="true"></ins>
+          <script>
+              (adsbygoogle = window.adsbygoogle || []).push({});
+          </script>
         </section>
       </div>
     </div>
