@@ -22,6 +22,17 @@ const SchoolListings = () => {
     ownership: searchParams.get('ownership') || ''
   });
 
+  // Update filters when URL params change
+  useEffect(() => {
+    setFilters({
+      schoolName: searchParams.get('schoolName') || '',
+      location: searchParams.get('location') || '',
+      curriculum: searchParams.get('curriculum') || '',
+      feeRange: searchParams.get('feeRange') || '',
+      ownership: searchParams.get('ownership') || ''
+    });
+  }, [searchParams]);
+
   // Reset to first page when filters change
   useEffect(() => {
     setCurrentPage(1);

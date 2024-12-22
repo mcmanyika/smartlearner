@@ -36,23 +36,19 @@ const Home = () => {
   }, [ads.length]);
 
   const handleSearch = async () => {
-    router.push({
-      pathname: '/libs/schools',
-      query: {
-        name: filterName,
-        location: filterLocation,
-        curriculum: filterCurriculum,
-        feeRange: filterFeeRange,
-        ownership: filterOwnership,
-      }
-    });
+    const queryParams = new URLSearchParams({
+      ...(filterName && { schoolName: filterName }),
+      ...(filterLocation && { location: filterLocation }),
+      ...(filterCurriculum && { curriculum: filterCurriculum }),
+      ...(filterFeeRange && { feeRange: filterFeeRange }),
+      ...(filterOwnership && { ownership: filterOwnership }),
+    }).toString();
+
+    router.push(`/libs/schools${queryParams ? `?${queryParams}` : ''}`);
   };
 
   const handleLocationClick = async (location) => {
-    router.push({
-      pathname: '/libs/schools',
-      query: { location }
-    });
+    router.push(`/libs/schools?location=${encodeURIComponent(location)}`);
   };
 
   return (
