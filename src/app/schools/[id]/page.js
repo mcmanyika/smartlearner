@@ -213,6 +213,10 @@ const SchoolDetailPage = () => {
                 <p className="text-gray-600">{school.location}</p>
               </div>
               <div>
+                <h3 className="font-medium text-gray-700 mb-2">Address</h3>
+                <p className="text-gray-600">{school.address || 'Not specified'}</p>
+              </div>
+              <div>
                 <h3 className="font-medium text-gray-700 mb-2">Curriculum</h3>
                 <p className="text-gray-600">{school.curriculum || 'Not specified'}</p>
               </div>
@@ -257,12 +261,12 @@ const SchoolDetailPage = () => {
               </div>
 
               <div className="flex justify-between items-center mb-6">
-                  {/* <button
+                  <button
                       onClick={() => setIsEditModalOpen(true)}
                       className="px-4 py-2 bg-slate-600 text-white rounded-full hover:bg-blue-700"
                   >
                       Edit School
-                  </button> */}
+                  </button>
               </div>
             </div>
 
@@ -536,6 +540,7 @@ const SchoolDetailPage = () => {
                     const updatedSchool = {
                       schoolName: formData.get('schoolName'),
                       location: formData.get('location'),
+                      address: formData.get('address'),
                       curriculum: formData.get('curriculum'),
                       ownership: formData.get('ownership'),
                       feeRange: formData.get('feeRange'),
@@ -580,6 +585,19 @@ const SchoolDetailPage = () => {
                           defaultValue={school.location}
                           className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
                           required
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Address
+                        </label>
+                        <textarea
+                          name="address"
+                          defaultValue={school.address}
+                          rows="2"
+                          className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                          placeholder="Enter complete address"
                         />
                       </div>
 
