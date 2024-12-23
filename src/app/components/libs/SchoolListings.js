@@ -68,7 +68,7 @@ const SchoolListings = () => {
   const uniqueOwnerships = [...new Set(schools.map(school => school.ownership))].sort();
 
   // Pagination calculations
-  const schoolsPerPage = 9;
+  const schoolsPerPage = 15;
   const indexOfLastSchool = currentPage * schoolsPerPage;
   const indexOfFirstSchool = indexOfLastSchool - schoolsPerPage;
   const currentSchools = filteredSchools.slice(indexOfFirstSchool, indexOfLastSchool);
